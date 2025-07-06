@@ -1,8 +1,3 @@
-Here's the **full advanced `README.md`** based on your instructions, using `/assets/banner.png` and reflecting the latest `LeUnBrIck` workflow:
-
----
-
-````markdown
 <p align="center">
   <img src="assets/banner.png" alt="LeUnBrIck Banner" />
 </p>
