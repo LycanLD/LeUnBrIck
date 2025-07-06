@@ -69,6 +69,31 @@ install_required_packages() {
     read -rp "Press ENTER to return to menu..."
 }
 
+# ---- Download Firmwares ----
+download_firmwares() {
+    msg "Checking for missing firmware files..."
+
+    mkdir -p "$FIRMWARES_DIR/2012" "$FIRMWARES_DIR/2015"
+
+    # URLs to ZIPs or direct DFU/MSE links (replace with real working links)
+    FIRMWARE_URL_2012="https://github.com/lycanld/LeUnBrIck/releases/download/hidden/firmware_2012.zip"
+    FIRMWARE_URL_2015="https://github.com/lycanld/LeUnBrIck/releases/download/hidden/firmware_2015.zip"
+
+    if [ ! -f "$FIRMWARES_DIR/2012/Firmware.MSE" ]; then
+        msg "Downloading firmware for 2012 iPod..."
+        wget -O /tmp/fw2012.zip "$FIRMWARE_URL_2012" || { err "Download failed."; return; }
+        unzip -o /tmp/fw2012.zip -d "$FIRMWARES_DIR/2012/"
+        ok "Extracted 2012 firmware."
+    fi
+
+    if [ ! -f "$FIRMWARES_DIR/2015/Firmware.MSE" ]; then
+        msg "Downloading firmware for 2015 iPod..."
+        wget -O /tmp/fw2015.zip "$FIRMWARE_URL_2015" || { err "Download failed."; return; }
+        unzip -o /tmp/fw2015.zip -d "$FIRMWARES_DIR/2015/"
+        ok "Extracted 2015 firmware."
+    fi
+}
+
 # ---- Wait for USB ----
 wait_for_usb() {
     expected="$1"
@@ -113,6 +138,7 @@ flash_with_dfuutil() {
 
 # ---- Unbrick 2012 ----
 unbrick_2012() {
+    download_firmwares
     msg "Put your iPod nano 7G (2012) into DFU mode"
     echo -e "${CYAN}→ USB-A to Lightning + Hold SLEEP + HOME until black screen${RESET}"
     read -rp "Press ENTER when ready..."
@@ -155,6 +181,7 @@ unbrick_2012() {
 
 # ---- Unbrick 2015 ----
 unbrick_2015() {
+    download_firmwares
     msg "Put your iPod nano 7G (2015) into DFU mode"
     read -rp "Press ENTER when ready..."
     wait_for_usb "$DFU_DEVICE" || return
@@ -196,7 +223,7 @@ main_menu() {
         print_banner
         echo -e "${BOLD}1)${RESET} Unbrick iPod nano 7G (2012)"
         echo -e "${BOLD}2)${RESET} Unbrick iPod nano 7G (2015)"
-        echo -e "${BOLD}3)${RESET} Install Required Software (Reccommeded to run before unbricking!)"
+        echo -e "${BOLD}3)${RESET} Install Required Files/Packages (Reccommeded to run before unbricking!)"
         echo -e "${BOLD}4)${RESET} Quit"
         ask "Choose an option: "
         read -r opt
