@@ -18,7 +18,7 @@ fi
 DFU_UTILS_DIR="./dfu_utils"
 WIND3X_DIR="./wInd3x"
 FIRMWARES_DIR="./firmwares"
-IPOD_SCSI="./freemyipod/tools/ipodscsi_linux/build/ipodscsi"
+IPOD_SCSI="./ipodscsi_linux/ipodscsi"
 
 WTF_PATH_2012="$FIRMWARES_DIR/WTF.x1234.RELEASE.dfu"
 FW_PATH_2012="$FIRMWARES_DIR/FIRMWARE.x124a.RELEASE.dfu"
@@ -34,7 +34,7 @@ print_banner() {
     clear
     echo -e "${BOLD}${CYAN}============= Le UnBrIcker ==============${RESET}"
     echo -e "${BLUE}★ iPod Nano 7G Unbrick/Restore toolkit ★${RESET}"
-    echo -e "${CYAN}        Made by Lycan  |  Ver: 1.2       ${RESET}"
+    echo -e "${CYAN}        Made by Lycan  |  Ver: 1.3       ${RESET}"
     echo -e "${CYAN}=========================================${RESET}"
 }
 
@@ -75,7 +75,6 @@ download_firmwares() {
 
     mkdir -p "$FIRMWARES_DIR/2012" "$FIRMWARES_DIR/2015"
 
-    # URLs to ZIPs or direct DFU/MSE links (replace with real working links)
     FIRMWARE_URL_2012="https://github.com/lycanld/LeUnBrIck/releases/download/hidden/firmware_2012.zip"
     FIRMWARE_URL_2015="https://github.com/lycanld/LeUnBrIck/releases/download/hidden/firmware_2015.zip"
 
@@ -109,7 +108,7 @@ wait_for_usb() {
     return 1
 }
 
-# ---- Flash safely ----
+# ---- Flash with dfu-util ----
 flash_with_dfuutil() {
     device="$1"
     file="$2"
@@ -168,7 +167,21 @@ unbrick_2012() {
             FINAL_MSE_2012="$FIRMWARES_DIR/2012/Firmware.MSE"
             [ -f "$IPOD_SCSI" ] || { err "ipodscsi not found."; return; }
             [ -f "$FINAL_MSE_2012" ] || { err "Missing Firmware.MSE."; return; }
-            sudo "$IPOD_SCSI" /dev/sda writefirmware -r -p "$FINAL_MSE_2012"
+
+            warn "[!] Flashing the wrong disk may harm your computer! Choose carefully."
+            echo -e "\n${CYAN}→ All drives/devices:${RESET}"
+            lsblk -d -o NAME,SIZE,MODEL | sed 's/^/   /'
+            echo
+            ask "Input the correct device (e.g., /dev/sda): "
+            read -r IPOD_DEVICE
+
+            if [[ -z "$IPOD_DEVICE" || ! -b "$IPOD_DEVICE" ]]; then
+                err "Invalid or missing block device: $IPOD_DEVICE"
+                read -rp "Press ENTER to return..."
+                return
+            fi
+
+            sudo "$IPOD_SCSI" "$IPOD_DEVICE" writefirmware -r -p "$FINAL_MSE_2012"
             ok "Firmware flashed via ipodscsi."
             ;;
         *) warn "Invalid choice." ;;
@@ -196,7 +209,9 @@ unbrick_2015() {
     ok "Device in WTF Mode. Firmware 1.1.2 available."
     ask "Flash it? (y/n): "
     read -r confirm
-    if [[ "$confirm" =~ ^[Yy]$ ]]; then
+    confirm="${confirm,,}"  # convert to lowercase
+
+    if [[ "$confirm" == "y" ]]; then
         [ -f "$FW_PATH_2015" ] || { err "Missing $FW_PATH_2015"; return; }
         msg "Flashing Disk Mode firmware..."
         flash_with_dfuutil "$WTF_DEVICE" "$FW_PATH_2015" || return
@@ -206,16 +221,30 @@ unbrick_2015() {
         [ -f "$IPOD_SCSI" ] || { err "ipodscsi not found."; return; }
         [ -f "$FINAL_MSE_2015" ] || { err "Missing Firmware.MSE."; return; }
 
-        msg "Writing Firmware.MSE (1.1.2)..."
-        sudo "$IPOD_SCSI" /dev/sda writefirmware -r -p "$FINAL_MSE_2015"
+        warn "[!] Flashing the wrong disk may harm your computer! Choose carefully."
+        echo -e "\n${CYAN}→ All drives/devices:${RESET}"
+        lsblk -d -o NAME,SIZE,MODEL | sed 's/^/   /'
+        echo
+        ask "Input the correct device (e.g., /dev/sda): "
+        read -r IPOD_DEVICE
+
+        if [[ -z "$IPOD_DEVICE" || ! -b "$IPOD_DEVICE" ]]; then
+            err "Invalid or missing block device: $IPOD_DEVICE"
+            read -rp "Press ENTER to return..."
+            return
+        fi
+
+        sudo "$IPOD_SCSI" "$IPOD_DEVICE" writefirmware -r -p "$FINAL_MSE_2015"
         ok "Firmware flashed via ipodscsi."
 
         echo
         warn "Still stuck in white screen?"
         echo -e "${CYAN}→ Hold SLEEP + HOME → Recovery Mode → Restore via iTunes${RESET}"
     fi
+
     read -rp "Press ENTER to return..."
 }
+
 
 # ---- Main Menu ----
 main_menu() {
@@ -223,7 +252,7 @@ main_menu() {
         print_banner
         echo -e "${BOLD}1)${RESET} Unbrick iPod nano 7G (2012)"
         echo -e "${BOLD}2)${RESET} Unbrick iPod nano 7G (2015)"
-        echo -e "${BOLD}3)${RESET} Install Required Files/Packages (Reccommeded to run before unbricking!)"
+        echo -e "${BOLD}3)${RESET} Install Required Files/Packages (Recommended to run before unbricking!)"
         echo -e "${BOLD}4)${RESET} Quit"
         ask "Choose an option: "
         read -r opt
