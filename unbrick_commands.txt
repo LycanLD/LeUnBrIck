@@ -1,0 +1,2 @@
+sudo dfu-util -d 05ac:1234 -D /home/lycan/Desktop/iPod\ Modding/Frimwares/WTF.x1234.RELEASE.dfu
+sudo dfu-util -d 05ac:1234 -D /home/lycan/Desktop/iPod\ Modding/Frimwares/FIRMWARE.x124a.RELEASE.dfu
