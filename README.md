@@ -1,8 +1,3 @@
-Here's an updated version of your `README.md` with a **✅ TODO list** section added near the bottom:
-
----
-
-````markdown
 <p align="center">
   <img src="assets/banner.png" alt="LeUnBrIck Banner" />
 </p>
