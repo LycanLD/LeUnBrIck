@@ -4,15 +4,15 @@
 
 # 🎧 LeUnBrIck
 
-> ⚡ Universal Unbricker & Flasher for iPod Nano 7th Gen (2012 & 2015)
+> ⚡ Universal Unbricker & Flasher for iPod Nano 6th & 7th Gen (2012 & 2015)
 
-`LeUnBrIck.sh` is an all-in-one toolkit for **restoring bricked iPod Nano 7G devices** using DFU/WTF mode. It supports both the 2012 and 2015 hardware revisions and provides options to flash using **wInd3x** or the **ipodscsi** tool.
+`LeUnBrIck` is an all-in-one toolkit for **restoring bricked iPod Nano 6G / 7G devices** using DFU/WTF mode. It supports both the 2012 and 2015 hardware revisions and provides options to flash using **wInd3x** or the **ipodscsi** tool.
 
 ---
 
 ## 🔧 Features
 
-- ✅ Restore iPod Nano 7G (2012 & 2015)
+- ✅ Restore iPod Nano 6G and 7G (2012 & 2015)
 - ⚡ Flash WTF & firmware images safely
 - ☁️ Auto-download missing `.MSE` firmware files
 - 🎨 Colorful and clean TUI interface
@@ -50,10 +50,11 @@ chmod +x LeUnBrIck.sh
 
 ### 🧙 Inside the Menu
 
-1. **Choose option 3** to install required packages
+1. **Choose option 4** to install required packages
 2. **Choose option 1** if you have a **2012 iPod Nano 7G**
 3. **Choose option 2** if you have a **2015 iPod Nano 7G**
-4. Follow on-screen instructions to enter DFU mode, WTF mode, and complete flashing
+4. **Choose option 3** if you have a **iPod Nano 6G**
+5. Follow on-screen instructions to enter DFU mode, WTF mode, and complete flashing
 
 ---
 
@@ -73,7 +74,7 @@ chmod +x LeUnBrIck.sh
 
 ## 📌 TODO
 
-* [ ] Nano 6G support. (SOON)
+* [x] Nano 6G support. (SOON)
 * [x] Auto-download `.MSE` files from GitHub
 * [x] Upgraded Interface (TUI)
 * [ ] GUI (QT / Tkinter)

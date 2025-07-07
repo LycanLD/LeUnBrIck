@@ -32,11 +32,17 @@ WTF_DEVICE="05ac:124a"
 # ---- UI Helpers ----
 print_banner() {
     clear
-    echo -e "${BOLD}${CYAN}============= Le UnBrIcker ==============${RESET}"
-    echo -e "${BLUE}★ iPod Nano 7G Unbrick/Restore toolkit ★${RESET}"
-    echo -e "${CYAN}        Made by Lycan  |  Ver: 1.3       ${RESET}"
+    echo -e "${CYAN}"
+    echo "      ╦  ┌─┐  ╦ ╦┌┐┌╔╗ ┬─┐╦┌─┐┬┌─"
+    echo "      ║  ├┤   ║ ║│││╠╩╗├┬┘║│  ├┴┐"
+    echo "      ╩═╝└─┘  ╚═╝┘└┘╚═╝┴└─╩└─┘┴ ┴"
+    echo -e "${RESET}"
+    echo -e "${BOLD}${CYAN}============== Le UnBrIck ===============${RESET}"
+    echo -e "${BLUE}★ iPod Nano 6G/7G Unbrick/Restore Tool ★${RESET}"
+    echo -e "${CYAN}        Made by Lycan  |  Ver: 1.3.1       ${RESET}"
     echo -e "${CYAN}=========================================${RESET}"
 }
+
 
 msg()   { echo -e "${CYAN}[*]${RESET} $*"; }
 ok()    { echo -e "${GREEN}[✓]${RESET} $*"; }
@@ -73,10 +79,11 @@ install_required_packages() {
 download_firmwares() {
     msg "Checking for missing firmware files..."
 
-    mkdir -p "$FIRMWARES_DIR/2012" "$FIRMWARES_DIR/2015"
+    mkdir -p "$FIRMWARES_DIR/2012" "$FIRMWARES_DIR/2015" "$FIRMWARES_DIR/6G"
 
     FIRMWARE_URL_2012="https://github.com/lycanld/LeUnBrIck/releases/download/hidden/firmware_2012.zip"
     FIRMWARE_URL_2015="https://github.com/lycanld/LeUnBrIck/releases/download/hidden/firmware_2015.zip"
+    FIRMWARE_URL_6G="https://github.com/lycanld/LeUnBrIck/releases/download/hidden/firmware_6G.zip"
 
     if [ ! -f "$FIRMWARES_DIR/2012/Firmware.MSE" ]; then
         msg "Downloading firmware for 2012 iPod..."
@@ -90,6 +97,13 @@ download_firmwares() {
         wget -O /tmp/fw2015.zip "$FIRMWARE_URL_2015" || { err "Download failed."; return; }
         unzip -o /tmp/fw2015.zip -d "$FIRMWARES_DIR/2015/"
         ok "Extracted 2015 firmware."
+    fi
+
+    if [ ! -f "$FIRMWARES_DIR/6G/Firmware.MSE" ]; then
+        msg "Downloading firmware for iPod nano 6G..."
+        wget -O /tmp/fw6g.zip "$FIRMWARE_URL_6G" || { err "Download failed."; return; }
+        unzip -o /tmp/fw6g.zip -d "$FIRMWARES_DIR/6G/"
+        ok "Extracted 6G firmware."
     fi
 }
 
@@ -245,23 +259,66 @@ unbrick_2015() {
     read -rp "Press ENTER to return..."
 }
 
+unbrick_6g() {
+    download_firmwares
+    msg "Put your iPod nano 6G into Disk Mode or WTF mode"
+
+    ask "Choose restore method:\n1) wInd3x restore\n2) Firmware.MSE via ipodscsi\nEnter 1 or 2: "
+    read -r method
+
+    case $method in
+        1)
+            sleep 5
+            "$WIND3X_DIR/wInd3x" restore
+            ok "Restored using wInd3x."
+            ;;
+        2)
+            FINAL_MSE_6G="$FIRMWARES_DIR/6G/Firmware.MSE"
+            [ -f "$IPOD_SCSI" ] || { err "ipodscsi not found."; return; }
+            [ -f "$FINAL_MSE_6G" ] || { err "Missing Firmware.MSE."; return; }
+
+            warn "[!] Flashing the wrong disk may harm your computer! Choose carefully."
+            echo -e "\n${CYAN}→ All drives/devices:${RESET}"
+            lsblk -d -o NAME,SIZE,MODEL | sed 's/^/   /'
+            echo
+            ask "Input the correct device (e.g., /dev/sda): "
+            read -r IPOD_DEVICE
+
+            if [[ -z "$IPOD_DEVICE" || ! -b "$IPOD_DEVICE" ]]; then
+                err "Invalid or missing block device: $IPOD_DEVICE"
+                read -rp "Press ENTER to return..."
+                return
+            fi
+
+            sudo "$IPOD_SCSI" "$IPOD_DEVICE" writefirmware -r -p "$FINAL_MSE_6G"
+            ok "Firmware flashed via ipodscsi."
+            ;;
+        *) warn "Invalid choice." ;;
+    esac
+
+    echo
+    warn "If stuck, try restoring via iTunes after Disk Mode."
+    read -rp "Press ENTER to return..."
+}
 
 # ---- Main Menu ----
 main_menu() {
     while true; do
         print_banner
-        echo -e "${BOLD}1)${RESET} Unbrick iPod nano 7G (2012)"
-        echo -e "${BOLD}2)${RESET} Unbrick iPod nano 7G (2015)"
-        echo -e "${BOLD}3)${RESET} Install Required Files/Packages (Recommended to run before unbricking!)"
-        echo -e "${BOLD}4)${RESET} Quit"
+        echo -e "${BOLD}1)${RESET} Unbrick iPod Nano 7G (2012)"
+        echo -e "${BOLD}2)${RESET} Unbrick iPod Nano 7G (2015)"
+        echo -e "${BOLD}3)${RESET} Unbrick iPod Nano 6G"
+        echo -e "${BOLD}4)${RESET} Install Required Files/Packages (Recommended to run before unbricking!)"
+        echo -e "${BOLD}5)${RESET} Quit"
         ask "Choose an option: "
         read -r opt
 
         case $opt in
             1) unbrick_2012 ;;
             2) unbrick_2015 ;;
-            3) install_required_packages ;;
-            4) clear; exit 0 ;;
+            3) unbrick_6g ;;
+            4) install_required_packages ;;
+            5) clear; exit 0 ;;
             *) warn "Invalid option." ; sleep 1 ;;
         esac
     done
