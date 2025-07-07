@@ -20,14 +20,20 @@ WIND3X_DIR="./wInd3x"
 FIRMWARES_DIR="./firmwares"
 IPOD_SCSI="./ipodscsi_linux/ipodscsi"
 
-WTF_PATH_2012="$FIRMWARES_DIR/WTF.x1234.RELEASE.dfu"
-FW_PATH_2012="$FIRMWARES_DIR/FIRMWARE.x124a.RELEASE.dfu"
+WTF_PATH_2012="$FIRMWARES_DIR/2012_DFU/WTF.x1234.RELEASE.dfu"
+FW_PATH_2012="$FIRMWARES_DIR/2012_DFU/FIRMWARE.x1249.RELEASE.dfu"
 
-WTF_PATH_2015="$FIRMWARES_DIR/WTF.x1234.RELEASE.dfu"
-FW_PATH_2015="$FIRMWARES_DIR/FIRMWARE.x124a.RELEASE.dfu"
+WTF_PATH_2015="$FIRMWARES_DIR/2015_DFU/WTF.x1234.RELEASE.dfu"
+FW_PATH_2015="$FIRMWARES_DIR/2012_DFU/FIRMWARE.x124a.RELEASE.dfu"
 
-DFU_DEVICE="05ac:1234"
-WTF_DEVICE="05ac:124a"
+WTF_PATH_6G="$FIRMWARES_DIR/6G_DFU/WTF.x1232.RELEASE.dfu"
+FW_PATH_6G="$FIRMWARES_DIR/6G_DFU/FIRMWARE.x1248.RELEASE.dfu"
+
+DFU_DEVICE_7G="05ac:1234"
+DFU_DEVICE_6G="05ac:1232"
+WTF_DEVICE_2012="05ac:1249"
+WTF_DEVICE_2015="05ac:124a"
+WTF_DEVICE_6G="05ac:1248"
 
 # ---- UI Helpers ----
 print_banner() {
@@ -39,10 +45,9 @@ print_banner() {
     echo -e "${RESET}"
     echo -e "${BOLD}${CYAN}============== Le UnBrIck ===============${RESET}"
     echo -e "${BLUE}★ iPod Nano 6G/7G Unbrick/Restore Tool ★${RESET}"
-    echo -e "${CYAN}        Made by Lycan  |  Ver: 1.3.1       ${RESET}"
+    echo -e "${CYAN}     Made by Lycan  |  Ver: 1.3.1 HF1   ${RESET}"
     echo -e "${CYAN}=========================================${RESET}"
 }
-
 
 msg()   { echo -e "${CYAN}[*]${RESET} $*"; }
 ok()    { echo -e "${GREEN}[✓]${RESET} $*"; }
@@ -155,80 +160,79 @@ unbrick_2012() {
     msg "Put your iPod nano 7G (2012) into DFU mode"
     echo -e "${CYAN}→ USB-A to Lightning + Hold SLEEP + HOME until black screen${RESET}"
     read -rp "Press ENTER when ready..."
-    wait_for_usb "$DFU_DEVICE" || return
+    wait_for_usb "$DFU_DEVICE_7G" || return
 
-    [ -f "$WTF_PATH_2012" ] || { err "Missing $WTF_PATH_2012"; return; }
-    flash_with_dfuutil "$DFU_DEVICE" "$WTF_PATH_2012"
+    [ -f "$WTF_PATH_2012" ] || { err "Missing WTF: $WTF_PATH_2012"; return; }
+    msg "Flashing WTF firmware..."
+    flash_with_dfuutil "$DFU_DEVICE_7G" "$WTF_PATH_2012" || return
 
     sleep 5
-    wait_for_usb "$WTF_DEVICE" || return
+    wait_for_usb "$WTF_DEVICE_2012" || { err "WTF mode not detected."; return; }
 
-    read -rp "Press ENTER to continue flashing firmware..."
-    [ -f "$FW_PATH_2012" ] || { err "Missing $FW_PATH_2012"; return; }
-    flash_with_dfuutil "$WTF_DEVICE" "$FW_PATH_2012"
+    ok "Device in WTF Mode. Disk Mode firmware available."
+    ask "Flash it? (y/n): "
+    read -r confirm
+    confirm="${confirm,,}"
 
-    echo
-    ask "Choose restore method:\n1) wInd3x\n2) Firmware.MSE via ipodscsi\nEnter 1 or 2: "
-    read -r choice
+    if [[ "$confirm" == "y" ]]; then
+        [ -f "$FW_PATH_2012" ] || { err "Missing $FW_PATH_2012"; return; }
+        msg "Flashing Disk Mode firmware..."
+        flash_with_dfuutil "$WTF_DEVICE_2012" "$FW_PATH_2012" || return
 
-    case $choice in
-        1)
-            sleep 5
-            "$WIND3X_DIR/wInd3x" restore
-            ok "Restored using wInd3x."
-            ;;
-        2)
-            FINAL_MSE_2012="$FIRMWARES_DIR/2012/Firmware.MSE"
-            [ -f "$IPOD_SCSI" ] || { err "ipodscsi not found."; return; }
-            [ -f "$FINAL_MSE_2012" ] || { err "Missing Firmware.MSE."; return; }
+        sleep 5
+        FINAL_MSE_2012="$FIRMWARES_DIR/2012/Firmware.MSE"
+        [ -f "$IPOD_SCSI" ] || { err "ipodscsi not found."; return; }
+        [ -f "$FINAL_MSE_2012" ] || { err "Missing Firmware.MSE."; return; }
 
-            warn "[!] Flashing the wrong disk may harm your computer! Choose carefully."
-            echo -e "\n${CYAN}→ All drives/devices:${RESET}"
-            lsblk -d -o NAME,SIZE,MODEL | sed 's/^/   /'
-            echo
-            ask "Input the correct device (e.g., /dev/sda): "
-            read -r IPOD_DEVICE
+        warn "[!] Flashing the wrong disk may harm your computer! Choose carefully."
+        echo -e "\n${CYAN}→ All drives/devices:${RESET}"
+        lsblk -d -o NAME,SIZE,MODEL | sed 's/^/   /'
+        echo
+        ask "Input the correct device (e.g., /dev/sda): "
+        read -r IPOD_DEVICE
 
-            if [[ -z "$IPOD_DEVICE" || ! -b "$IPOD_DEVICE" ]]; then
-                err "Invalid or missing block device: $IPOD_DEVICE"
-                read -rp "Press ENTER to return..."
-                return
-            fi
+        if [[ -z "$IPOD_DEVICE" || ! -b "$IPOD_DEVICE" ]]; then
+            err "Invalid or missing block device: $IPOD_DEVICE"
+            read -rp "Press ENTER to return..."
+            return
+        fi
 
-            sudo "$IPOD_SCSI" "$IPOD_DEVICE" writefirmware -r -p "$FINAL_MSE_2012"
-            ok "Firmware flashed via ipodscsi."
-            ;;
-        *) warn "Invalid choice." ;;
-    esac
+        sudo "$IPOD_SCSI" "$IPOD_DEVICE" writefirmware -r -p "$FINAL_MSE_2012"
+        ok "Firmware flashed via ipodscsi."
 
-    echo
-    warn "If stuck, use Windows + iTunes to restore."
+        echo
+        warn "Still stuck in white screen?"
+        echo -e "${CYAN}→ Hold SLEEP + HOME → Recovery Mode → Restore via iTunes${RESET}"
+    fi
+
     read -rp "Press ENTER to return..."
 }
+
 
 # ---- Unbrick 2015 ----
 unbrick_2015() {
     download_firmwares
     msg "Put your iPod nano 7G (2015) into DFU mode"
+    echo -e "${CYAN}→ USB-A to Lightning + Hold SLEEP + HOME until black screen${RESET}"
     read -rp "Press ENTER when ready..."
-    wait_for_usb "$DFU_DEVICE" || return
+    wait_for_usb "$DFU_DEVICE_7G" || return
 
     [ -f "$WTF_PATH_2015" ] || { err "Missing WTF: $WTF_PATH_2015"; return; }
     msg "Flashing WTF firmware..."
-    flash_with_dfuutil "$DFU_DEVICE" "$WTF_PATH_2015" || return
+    flash_with_dfuutil "$DFU_DEVICE_7G" "$WTF_PATH_2015" || return
 
     sleep 5
-    wait_for_usb "$WTF_DEVICE" || { err "WTF mode not detected."; return; }
+    wait_for_usb "$WTF_DEVICE_2015" || { err "WTF mode not detected."; return; }
 
-    ok "Device in WTF Mode. Firmware 1.1.2 available."
+    ok "Device in WTF Mode. Disk Mode firmware available."
     ask "Flash it? (y/n): "
     read -r confirm
-    confirm="${confirm,,}"  # convert to lowercase
+    confirm="${confirm,,}"
 
     if [[ "$confirm" == "y" ]]; then
         [ -f "$FW_PATH_2015" ] || { err "Missing $FW_PATH_2015"; return; }
         msg "Flashing Disk Mode firmware..."
-        flash_with_dfuutil "$WTF_DEVICE" "$FW_PATH_2015" || return
+        flash_with_dfuutil "$WTF_DEVICE_2015" "$FW_PATH_2015" || return
 
         sleep 5
         FINAL_MSE_2015="$FIRMWARES_DIR/2015/Firmware.MSE"
@@ -259,47 +263,60 @@ unbrick_2015() {
     read -rp "Press ENTER to return..."
 }
 
+# ---- Unbrick 6G ----
 unbrick_6g() {
     download_firmwares
-    msg "Put your iPod nano 6G into Disk Mode or WTF mode"
+    msg "Put your iPod nano 6G into DFU mode"
+    echo -e "${CYAN}→ Hold MENU + CENTER until black screen, then plug USB${RESET}"
+    read -rp "Press ENTER when ready..."
+    wait_for_usb "$DFU_DEVICE_6G" || return
 
-    ask "Choose restore method:\n1) wInd3x restore\n2) Firmware.MSE via ipodscsi\nEnter 1 or 2: "
-    read -r method
+    [ -f "$WTF_PATH_6G" ] || { err "Missing WTF: $WTF_PATH_6G"; return; }
+    msg "Flashing WTF firmware..."
+    flash_with_dfuutil "$DFU_DEVICE_6G" "$WTF_PATH_6G" || return
 
-    case $method in
-        1)
-            sleep 5
-            "$WIND3X_DIR/wInd3x" restore
-            ok "Restored using wInd3x."
-            ;;
-        2)
-            FINAL_MSE_6G="$FIRMWARES_DIR/6G/Firmware.MSE"
-            [ -f "$IPOD_SCSI" ] || { err "ipodscsi not found."; return; }
-            [ -f "$FINAL_MSE_6G" ] || { err "Missing Firmware.MSE."; return; }
+    sleep 5
+    wait_for_usb "$WTF_DEVICE_6G" || { err "WTF mode not detected."; return; }
 
-            warn "[!] Flashing the wrong disk may harm your computer! Choose carefully."
-            echo -e "\n${CYAN}→ All drives/devices:${RESET}"
-            lsblk -d -o NAME,SIZE,MODEL | sed 's/^/   /'
-            echo
-            ask "Input the correct device (e.g., /dev/sda): "
-            read -r IPOD_DEVICE
+    ok "Device in WTF Mode. Disk Mode firmware available."
+    ask "Flash it? (y/n): "
+    read -r confirm
+    confirm="${confirm,,}"  # convert to lowercase
 
-            if [[ -z "$IPOD_DEVICE" || ! -b "$IPOD_DEVICE" ]]; then
-                err "Invalid or missing block device: $IPOD_DEVICE"
-                read -rp "Press ENTER to return..."
-                return
-            fi
+    if [[ "$confirm" == "y" ]]; then
+        [ -f "$FW_PATH_6G" ] || { err "Missing $FW_PATH_6G"; return; }
+        msg "Flashing Disk Mode firmware..."
+        flash_with_dfuutil "$WTF_DEVICE_6G" "$FW_PATH_6G" || return
 
-            sudo "$IPOD_SCSI" "$IPOD_DEVICE" writefirmware -r -p "$FINAL_MSE_6G"
-            ok "Firmware flashed via ipodscsi."
-            ;;
-        *) warn "Invalid choice." ;;
-    esac
+        sleep 5
+        FINAL_MSE_6G="$FIRMWARES_DIR/6G/Firmware.MSE"
+        [ -f "$IPOD_SCSI" ] || { err "ipodscsi not found."; return; }
+        [ -f "$FINAL_MSE_6G" ] || { err "Missing Firmware.MSE."; return; }
 
-    echo
-    warn "If stuck, try restoring via iTunes after Disk Mode."
+        warn "[!] Flashing the wrong disk may harm your computer! Choose carefully."
+        echo -e "\n${CYAN}→ All drives/devices:${RESET}"
+        lsblk -d -o NAME,SIZE,MODEL | sed 's/^/   /'
+        echo
+        ask "Input the correct device (e.g., /dev/sda): "
+        read -r IPOD_DEVICE
+
+        if [[ -z "$IPOD_DEVICE" || ! -b "$IPOD_DEVICE" ]]; then
+            err "Invalid or missing block device: $IPOD_DEVICE"
+            read -rp "Press ENTER to return..."
+            return
+        fi
+
+        sudo "$IPOD_SCSI" "$IPOD_DEVICE" writefirmware -r -p "$FINAL_MSE_6G"
+        ok "Firmware flashed via ipodscsi."
+
+        echo
+        warn "Still stuck in white screen?"
+        echo -e "${CYAN}→ Hold Sleep/Wake + Volume down → Disk Mode → Restore via iTunes${RESET}"
+    fi
+
     read -rp "Press ENTER to return..."
 }
+
 
 # ---- Main Menu ----
 main_menu() {
