@@ -73,6 +73,7 @@ chmod +x LeUnBrIck.sh
 
 ## 📌 TODO
 
+* [] Nano 6G support. (SOON)
 * [x] Auto-download `.MSE` files from GitHub
 * [x] Upgraded Interface (TUI)
 * [ ] GUI (QT / Tkinter)
