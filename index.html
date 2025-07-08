@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LeUnBrIck - iPod Nano 7G Unbricker</title>
+  <title>LeUnBrIck - iPod Nano Unbricker</title>
   <style>
     body {
       font-family: sans-serif;
@@ -21,7 +21,7 @@
     .content {
       max-width: 800px;
       margin: auto;
-      padding: 1rem;
+      padding: 1.5rem;
       background: #1a1a1a;
       border-radius: 12px;
       box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
@@ -30,10 +30,20 @@
       color: #66ccff;
       text-decoration: none;
     }
+    a:hover {
+      text-decoration: underline;
+    }
     code {
       background: #222;
       padding: 0.2em 0.4em;
       border-radius: 4px;
+      font-family: monospace;
+    }
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 0.9em;
+      color: #888;
     }
   </style>
 </head>
@@ -41,35 +51,46 @@
   <header>
     <img src="assets/banner.png" alt="LeUnBrIck Banner" />
     <h1>🎧 LeUnBrIck</h1>
-    <p>Universal Unbricker & Flasher for iPod Nano 7th Gen (2012 & 2015)</p>
+    <p>Universal Unbricker & Flasher for iPod Nano 6G & 7G (2012 / 2015)</p>
   </header>
 
   <div class="content">
     <h2>⚡ What is LeUnBrIck?</h2>
-    <p><strong>LeUnBrIck.sh</strong> is an all-in-one bash toolkit to restore bricked iPod Nano 7G devices via DFU/WTF mode using official Apple DFU firmware and <code>ipodscsi</code>.</p>
+    <p><strong>LeUnBrIck.sh</strong> is an all-in-one bash toolkit to restore bricked iPod Nano 6G & 7G devices via DFU/WTF mode using Apple DFU firmware and tools like <code>wInd3x</code> and <code>ipodscsi</code>.</p>
 
     <h2>📥 Download & Usage</h2>
     <ol>
-      <li>Clone this repo: <code>git clone https://github.com/yourname/LeUnBrIck</code></li>
-      <li>Run the script: <code>./LeUnBrIck.sh</code></li>
+      <li>Clone the repository:<br><code>git clone https://github.com/lycanld/LeUnBrIck</code></li>
+      <li>Navigate to the folder:<br><code>cd LeUnBrIck</code></li>
+      <li>Make script executable:<br><code>chmod +x LeUnBrIck.sh</code></li>
+      <li>Launch the app:<br><code>./LeUnBrIck.sh</code></li>
+      <li>Select <strong>Option 3</strong> to auto-install required packages</li>
+      <li>Then pick the model you want to unbrick (2012 / 2015 / 6G)</li>
     </ol>
 
-    <h2>📁 Includes</h2>
+    <h2>📁 Toolkit Includes</h2>
     <ul>
-      <li>Auto-detection of DFU/WTF devices</li>
-      <li>Automatic flashing of Apple WTF & DiskMode DFU firmware</li>
-      <li>Support for both <strong>2012</strong> and <strong>2015</strong> iPod Nano 7G</li>
-      <li>Open-source, fully local</li>
+      <li>Automatic DFU/WTF detection</li>
+      <li>Firmware flashing for:
+        <ul>
+          <li>iPod Nano 7G (2012)</li>
+          <li>iPod Nano 7G (2015)</li>
+          <li>iPod Nano 6G</li>
+        </ul>
+      </li>
+      <li>Auto-downloads missing firmware files if needed</li>
+      <li>Advanced flashing via wInd3x or ipodscsi</li>
+      <li>Dark-mode styled terminal UI with color indicators</li>
     </ul>
 
     <h2>🔗 Resources</h2>
     <ul>
-      <li><a href="https://github.com/yourname/LeUnBrIck" target="_blank">View on GitHub</a></li>
-      <li><a href="https://appledb.dev" target="_blank">AppleDB Firmware Archive</a></li>
+      <li><a href="https://github.com/lycanld/LeUnBrIck" target="_blank">View on GitHub</a></li>
+      <li><a href="https://appledb.dev" target="_blank">AppleDB – DFU Firmware Archive</a></li>
     </ul>
 
     <footer>
-      <p style="text-align:center; margin-top:2rem;">Made with 💻 by <a href="https://github.com/yourname">YourName</a></p>
+      <p>Made with 💻 by <a href="https://github.com/lycanld">Lycan</a> — Open Source, MIT Licensed</p>
     </footer>
   </div>
 </body>
