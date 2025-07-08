@@ -4,94 +4,208 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>LeUnBrIck - iPod Nano Unbricker</title>
+  <link rel="icon" href="assets/banner.png" />
   <style>
-    body {
-      font-family: sans-serif;
-      background-color: #0c0c0c;
-      color: #e0e0e0;
-      margin: 0;
-      padding: 2rem;
+    :root {
+      --bg: #0c0c0c;
+      --card: #1a1a1a;
+      --accent: #66ccff;
+      --text: #e0e0e0;
+      --muted: #888;
+      --code: #222;
     }
+
+    * {
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 2rem 1rem;
+    }
+
     header {
       text-align: center;
+      margin-bottom: 2rem;
     }
-    img {
-      max-width: 100%;
+
+    header img {
+      width: 100%;
+      max-width: 850px;
+      height: auto;
+      border-radius: 16px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.05);
+      margin-bottom: 1.2rem;
     }
+
+    h1 {
+      font-size: 2.5rem;
+      margin: 0.5rem 0;
+    }
+
+    .subheading {
+      font-size: 1.1rem;
+      color: #ccc;
+    }
+
     .content {
-      max-width: 800px;
+      max-width: 850px;
       margin: auto;
-      padding: 1.5rem;
-      background: #1a1a1a;
-      border-radius: 12px;
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
+      background-color: var(--card);
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 0 24px rgba(255, 255, 255, 0.05);
     }
+
+    h2 {
+      border-left: 4px solid var(--accent);
+      padding-left: 0.5rem;
+      color: var(--accent);
+      margin-top: 2rem;
+    }
+
     a {
-      color: #66ccff;
+      color: var(--accent);
       text-decoration: none;
     }
+
     a:hover {
       text-decoration: underline;
     }
+
     code {
-      background: #222;
+      background: var(--code);
       padding: 0.2em 0.4em;
       border-radius: 4px;
       font-family: monospace;
     }
+
+    ol, ul {
+      padding-left: 1.5rem;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.75em 1.6em;
+      background-color: var(--accent);
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .button:hover {
+      filter: brightness(1.15);
+      transform: scale(1.03);
+    }
+
+    .github-corner {
+      fill: var(--accent);
+      color: #000;
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+
     footer {
       text-align: center;
       margin-top: 3rem;
       font-size: 0.9em;
-      color: #888;
+      color: var(--muted);
+    }
+
+    @media (max-width: 768px) {
+      .content {
+        padding: 1.2rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      header img {
+        max-width: 90%;
+      }
     }
   </style>
 </head>
 <body>
+
+  <!-- GitHub Corner -->
+  <a href="https://github.com/lycanld/LeUnBrIck" class="github-corner" aria-label="View source on GitHub" style="position: absolute; top: 0; right: 0; z-index: 1000; width: 70px; height: 70px; display: block;">
+    <svg width="90" height="90" viewBox="0 0 80 80" style="position: absolute; top: 0; right: 0;" aria-hidden="true">
+      <polygon points="80,0 80,80 0,0" fill="#66ccff"/>
+    </svg>
+    <img src="assets/github.png" alt="GitHub" style="position: absolute; top: 10px; right: 10px; width: 36px; height: 36px; object-fit: contain; filter: drop-shadow(0 1px 4px #0008);" />
+  </a>
+
   <header>
     <img src="assets/banner.png" alt="LeUnBrIck Banner" />
     <h1>🎧 LeUnBrIck</h1>
-    <p>Universal Unbricker & Flasher for iPod Nano 6G & 7G (2012 / 2015)</p>
+    <p class="subheading">Universal Unbricker & Flasher for iPod Nano 6G & 7G (2012 / 2015)</p>
+    <a class="button" href="https://github.com/lycanld/LeUnBrIck" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5em;">
+      <img src="assets/github.png" alt="GitHub" style="width:1.3em; height:1.3em; display:inline-block; margin-bottom:-0.15em; margin-right:0.3em;" />
+      <span style="display:inline-block; vertical-align:middle;">View on GitHub</span>
+    </a>
   </header>
 
   <div class="content">
     <h2>⚡ What is LeUnBrIck?</h2>
-    <p><strong>LeUnBrIck.sh</strong> is an all-in-one bash toolkit to restore bricked iPod Nano 6G & 7G devices via DFU/WTF mode using Apple DFU firmware and tools like <code>wInd3x</code> and <code>ipodscsi</code>.</p>
+    <p><strong>LeUnBrIck.sh</strong> is a terminal-based bash script to recover bricked iPod Nano devices using DFU/WTF modes, Apple firmware, and tools like <code>wInd3x</code> and <code>ipodscsi</code>.</p>
 
-    <h2>📥 Download & Usage</h2>
+    <h2>📥 How to Use</h2>
     <ol>
-      <li>Clone the repository:<br><code>git clone https://github.com/lycanld/LeUnBrIck</code></li>
-      <li>Navigate to the folder:<br><code>cd LeUnBrIck</code></li>
-      <li>Make script executable:<br><code>chmod +x LeUnBrIck.sh</code></li>
-      <li>Launch the app:<br><code>./LeUnBrIck.sh</code></li>
-      <li>Select <strong>Option 3</strong> to auto-install required packages</li>
-      <li>Then pick the model you want to unbrick (2012 / 2015 / 6G)</li>
+      <li>Clone the repository: <code>git clone https://github.com/lycanld/LeUnBrIck</code></li>
+      <li>Change directory: <code>cd LeUnBrIck</code></li>
+      <li>Make it executable: <code>chmod +x LeUnBrIck.sh</code></li>
+      <li>Run the script: <code>./LeUnBrIck.sh</code></li>
+      <li>Follow the terminal UI to select your model and flash firmware</li>
     </ol>
 
-    <h2>📁 Toolkit Includes</h2>
+    <h2>📁 Features</h2>
     <ul>
-      <li>Automatic DFU/WTF detection</li>
-      <li>Firmware flashing for:
+      <li>Automatic detection of DFU/WTF iPods</li>
+      <li>Auto-install required tools (Option 3)</li>
+      <li>Firmware flashing support for:
         <ul>
           <li>iPod Nano 7G (2012)</li>
           <li>iPod Nano 7G (2015)</li>
           <li>iPod Nano 6G</li>
         </ul>
       </li>
-      <li>Auto-downloads missing firmware files if needed</li>
-      <li>Advanced flashing via wInd3x or ipodscsi</li>
-      <li>Dark-mode styled terminal UI with color indicators</li>
+      <li>Auto-fetch firmware files from AppleDB.dev if missing</li>
+      <li>Supports flashing via wInd3x and ipodscsi (Linux/macOS)</li>
+      <li>Color-coded terminal UI</li>
     </ul>
 
     <h2>🔗 Resources</h2>
     <ul>
-      <li><a href="https://github.com/lycanld/LeUnBrIck" target="_blank">View on GitHub</a></li>
-      <li><a href="https://appledb.dev" target="_blank">AppleDB – DFU Firmware Archive</a></li>
+      <li><a href="https://github.com/lycanld/LeUnBrIck" target="_blank">GitHub Repository</a></li>
+      <li><a href="https://appledb.dev" target="_blank">AppleDB – Firmware Archive</a></li>
+      <li><a href="https://github.com/freemyipod/wInd3x" target="_blank">wInd3x</a></li>
+      <li><a href="https://freemyipod.org" target="_blank">freemyipod</a></li>
     </ul>
 
     <footer>
-      <p>Made with 💻 by <a href="https://github.com/lycanld">Lycan</a> — Open Source, MIT Licensed</p>
+      <p>🚀 Made with 💖 by <a href="https://github.com/lycanld">Lycan</a> — MIT Licensed</p>
     </footer>
+    <div style="text-align:center; margin: 2rem 0 0 0;">
+      <button class="button back-to-top" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">Back to Top ⬆️</button>
+    </div>
   </div>
 </body>
 </html>
+<script>
+  // Smooth scroll to top
+  document.querySelector('footer a').addEventListener('click', function(event) {
+    event.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });   
