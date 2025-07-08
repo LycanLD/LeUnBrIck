@@ -93,7 +93,8 @@ chmod +x LeUnBrIck.sh
 * Seeing `LIBUSB_ERROR_NO_DEVICE` at the end of flashing is **normal** and expected.
 
 ---
-
+## ⭐Remember to give this project a star if you like it / if it worked for you.🌟
+---
 ## 📜 License
 
 MIT License — free to use, fork, and modify.
