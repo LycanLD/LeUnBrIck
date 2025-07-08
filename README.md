@@ -22,7 +22,7 @@
 
 ## 📥 Requirements
 
-- 🐧 Linux (Debian, Arch, Alpine, etc.)
+- 🐧 Linux (Debian, Arch, Alpine, etc.) or MacOS
 - 🔌 USB-A to Lightning cable
 - 📦 `dfu-util`, `libusb`, `make`, `go`, `git`
 
@@ -74,11 +74,12 @@ chmod +x LeUnBrIck.sh
 
 ## 📌 TODO
 
-* [x] Nano 6G support. (SOON)
+* [x] Nano 6G support.
 * [x] Auto-download `.MSE` files from GitHub
 * [x] Upgraded Interface (TUI)
 * [ ] GUI (QT / Tkinter)
 * [x] Support for both 2012 and 2015 hardware
+* [x] MacOS support (accidental but okay)
 * [x] Added custom firmware flashing device (not locked to /dev/sda)
 * [ ] Improve detection for connected iPod revision
 * [ ] Add Windows support.
