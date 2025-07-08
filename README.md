@@ -80,7 +80,7 @@ chmod +x LeUnBrIck.sh
 * [ ] GUI (QT / Tkinter)
 * [x] Support for both 2012 and 2015 hardware
 * [x] MacOS support (accidental but okay)
-* [x] Added custom firmware flashing device (not locked to /dev/sda)
+* [x] Added custom firmware flashing device (not locked to   `/dev/sda`)
 * [ ] Improve detection for connected iPod revision
 * [ ] Add Windows support.
 
