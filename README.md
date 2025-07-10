@@ -23,6 +23,7 @@
 ## 📥 Requirements
 
 - 🐧 Linux (Debian, Arch, Alpine, etc.) or MacOS
+- 🪟 Womp Womp Windows users.
 - 🔌 USB-A to Lightning cable
 - 📦 `dfu-util`, `libusb`, `make`, `go`, `git`
 
