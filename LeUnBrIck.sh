@@ -61,17 +61,17 @@ install_required_packages() {
     msg "Installing required packages..."
 
     if command -v apt &>/dev/null; then
-        sudo apt update && sudo apt install -y git golang libusb-1.0-0-dev dfu-util make
+        apt update && sudo apt install -y git golang libusb-1.0-0-dev dfu-util make
     elif command -v dnf &>/dev/null; then
-        sudo dnf install -y git golang libusbx-devel dfu-util make
+        dnf install -y git golang libusbx-devel dfu-util make
     elif command -v pacman &>/dev/null; then
-        sudo pacman -Sy --noconfirm git go libusb dfu-util make
+        pacman -Sy --noconfirm git go libusb dfu-util make
     elif command -v zypper &>/dev/null; then
-        sudo zypper install -y git go libusb-1_0-devel dfu-util make
+        zypper install -y git go libusb-1_0-devel dfu-util make
     elif command -v emerge &>/dev/null; then
-        sudo emerge dev-vcs/git dev-lang/go virtual/libusb sys-apps/dfu-util
+        emerge dev-vcs/git dev-lang/go virtual/libusb sys-apps/dfu-util
     elif command -v apk &>/dev/null; then
-        sudo apk add git go libusb-dev dfu-util make
+        apk add git go libusb-dev dfu-util make
     else
         err "Unsupported package manager."
         exit 1
