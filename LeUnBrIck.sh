@@ -61,11 +61,11 @@ install_required_packages() {
     msg "Installing required packages..."
 
     if command -v apt &>/dev/null; then
-        apt update && sudo apt install -y git golang libusb-1.0-0-dev dfu-util make
+        apt update && sudo apt install -y git golang libusb-1.0-0-dev dfu-util make usb-utils
     elif command -v dnf &>/dev/null; then
         dnf install -y git golang libusbx-devel dfu-util make
     elif command -v pacman &>/dev/null; then
-        pacman -Sy --noconfirm git go libusb dfu-util make
+        pacman -Sy --noconfirm git go libusb dfu-util usbutils make
     elif command -v zypper &>/dev/null; then
         zypper install -y git go libusb-1_0-devel dfu-util make
     elif command -v emerge &>/dev/null; then
