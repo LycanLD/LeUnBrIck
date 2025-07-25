@@ -22,12 +22,16 @@
 
 ## 📥 Requirements
 
-- 🐧 Linux (Debian, Arch, Alpine, etc.) or MacOS
-- 🪟 Womp Womp Windows users.
-- 🔌 USB-A to Lightning cable
-- 📦 `dfu-util`, `libusb`, `make`, `go`, `git`
+* 🐧 **Linux** (Debian, **Arch**, Alpine, etc.) or **macOS**
 
-No need to install manually — just run the built-in installer.
+  > ✅ *Recommended: Arch Linux on real hardware (A Steam Deck or a Live USB would work)*
+* 🪟 **Womp Womp Windows users** (WSL won't work either)
+
+  > 💡 *Tip: Use a Linux Live USB instead*
+* 🔌 **USB-A to Lightning** cable
+* 📦 Required packages: `dfu-util`, `libusb`, `make`, `go`, `git`
+
+🛠 No need to install these manually — just run the built-in installer.
 
 ---
 
