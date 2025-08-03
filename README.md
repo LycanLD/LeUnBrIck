@@ -98,6 +98,35 @@ chmod +x LeUnBrIck.sh
 * Seeing `LIBUSB_ERROR_NO_DEVICE` at the end of flashing is **normal** and expected.
 
 ---
+---
+
+## 🙌 Special Thanks
+
+Huge appreciation to the amazing contributors and community members who made this project possible:
+
+- **@LycanLD** — Creator of LeUnBrIck and lead developer  
+- **@Ruff** — Packaging, testing, and distribution  
+- **@nfzerox** — For ipod_theme
+- **@CUB3D** - For ipod_sun
+- **@freemyipod** — For wInd3x, freemyipod and ipodscsi
+- **@Stefan-Schmidt** — For dfu_utils
+- **@760ceb3b9c0ba4872cadf3ce35a7a494** — For ipodhax and other IPSW unpacking scripts (+ He helped me unbrick mine the hard way)
+- **@Zeehondie** — Cuz he's a seal
+
+---
+
+## 💬 Join the Community
+
+Want help, mods, or just to show off your themed iPod? Join us on Discord:
+
+- 🎨 **iPod Theme Discord**: [https://discord.com/invite/SfWYYPUAEZ](https://discord.com/invite/SfWYYPUAEZ)
+- 🔧 **iPod Modding Discord**: [https://discord.com/invite/7PnGEXjW3X](https://discord.com/invite/7PnGEXjW3X)
+
+<p align="center">
+  <img src="assets/discord_qr.png" alt="Join the iPod Modding Discord" width="200"/>
+</p>
+
+---
 ## ⭐Remember to give this project a star if you like it / if it worked for you.🌟
 ---
 ## 📜 License
