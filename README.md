@@ -123,7 +123,7 @@ Want help, mods, or just to show off your themed iPod? Join us on Discord:
 - 🔧 **iPod Modding Discord**: [https://discord.com/invite/7PnGEXjW3X](https://discord.com/invite/7PnGEXjW3X)
 
 <p align="center">
-  <img src="assets/discord_qr.png" alt="Join the iPod Modding Discord" width="200"/>
+  <img src="assets/discord_qr.png" alt="Join the iPod Nano Theming Discord" width="200"/>
 </p>
 
 ---
