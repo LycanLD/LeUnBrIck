@@ -1,6 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 
+# Check for sudo access
+if ! sudo -n true 2>/dev/null; then
+    echo "This script requires sudo access for USB flashing and firmware writing."
+    sudo true || { echo "Sudo access required."; exit 1; }
+fi
+
 # ---- Color codes ----
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -24,7 +30,7 @@ WTF_PATH_2012="$FIRMWARES_DIR/2012_DFU/WTF.x1234.RELEASE.dfu"
 FW_PATH_2012="$FIRMWARES_DIR/2012_DFU/FIRMWARE.x1249.RELEASE.dfu"
 
 WTF_PATH_2015="$FIRMWARES_DIR/2015_DFU/WTF.x1234.RELEASE.dfu"
-FW_PATH_2015="$FIRMWARES_DIR/2012_DFU/FIRMWARE.x124a.RELEASE.dfu"
+FW_PATH_2015="$FIRMWARES_DIR/2015_DFU/FIRMWARE.x124a.RELEASE.dfu"
 
 WTF_PATH_6G="$FIRMWARES_DIR/6G_DFU/WTF.x1232.RELEASE.dfu"
 FW_PATH_6G="$FIRMWARES_DIR/6G_DFU/FIRMWARE.x1248.RELEASE.dfu"
@@ -45,7 +51,7 @@ print_banner() {
     echo -e "${RESET}"
     echo -e "${BOLD}${CYAN}============== Le UnBrIck ===============${RESET}"
     echo -e "${BLUE}★ iPod Nano 6G/7G Unbrick/Restore Tool ★${RESET}"
-    echo -e "${CYAN}     Made by Lycan  |  Ver: 1.3.1 HF1   ${RESET}"
+    echo -e "${CYAN}     Made by Lycan  |  Ver: 1.4   ${RESET}"
     echo -e "${CYAN}=========================================${RESET}"
 }
 
@@ -61,23 +67,41 @@ install_required_packages() {
     msg "Installing required packages..."
 
     if command -v apt &>/dev/null; then
-        apt update && sudo apt install -y git golang libusb-1.0-0-dev dfu-util make usb-utils
+        sudo apt update && sudo apt install -y git golang libusb-1.0-0-dev dfu-util make usb-utils
     elif command -v dnf &>/dev/null; then
-        dnf install -y git golang libusbx-devel dfu-util make
+        sudo dnf install -y git golang libusbx-devel dfu-util make
     elif command -v pacman &>/dev/null; then
-        pacman -Sy --noconfirm git go libusb dfu-util usbutils make
+        sudo pacman -Sy --noconfirm git go libusb dfu-util usbutils make
     elif command -v zypper &>/dev/null; then
-        zypper install -y git go libusb-1_0-devel dfu-util make
+        sudo zypper install -y git go libusb-1_0-devel dfu-util make
     elif command -v emerge &>/dev/null; then
-        emerge dev-vcs/git dev-lang/go virtual/libusb sys-apps/dfu-util
+        sudo emerge dev-vcs/git dev-lang/go virtual/libusb sys-apps/dfu-util
     elif command -v apk &>/dev/null; then
-        apk add git go libusb-dev dfu-util make
+        sudo apk add git go libusb-dev dfu-util make
     else
         err "Unsupported package manager."
         exit 1
     fi
     ok "All required packages installed!"
     read -rp "Press ENTER to return to menu..."
+}
+
+# ---- Check Dependencies ----
+check_dependencies() {
+    msg "Checking for required dependencies..."
+    missing=()
+    for cmd in dfu-util lsusb wget unzip; do
+        if ! command -v "$cmd" &>/dev/null; then
+            missing+=("$cmd")
+        fi
+    done
+    if [ ${#missing[@]} -eq 0 ]; then
+        ok "All dependencies are installed."
+        return 0
+    else
+        warn "Missing dependencies: ${missing[*]}"
+        return 1
+    fi
 }
 
 # ---- Download Firmwares ----
@@ -154,120 +178,15 @@ flash_with_dfuutil() {
     fi
 }
 
-# ---- Unbrick 2012 ----
-unbrick_2012() {
-    download_firmwares
-    msg "Put your iPod nano 7G (2012) into DFU mode"
-    echo -e "${CYAN}→ USB-A to Lightning + Hold SLEEP + HOME until black screen${RESET}"
-    read -rp "Press ENTER when ready..."
-    wait_for_usb "$DFU_DEVICE_7G" || return
-
-    [ -f "$WTF_PATH_2012" ] || { err "Missing WTF: $WTF_PATH_2012"; return; }
-    msg "Flashing WTF firmware..."
-    flash_with_dfuutil "$DFU_DEVICE_7G" "$WTF_PATH_2012" || return
-
-    sleep 5
-    wait_for_usb "$WTF_DEVICE_2012" || { err "WTF mode not detected."; return; }
-
-    ok "Device in WTF Mode. Disk Mode firmware available."
-    ask "Flash it? (y/n): "
-    read -r confirm
-    confirm="${confirm,,}"
-
-    if [[ "$confirm" == "y" ]]; then
-        [ -f "$FW_PATH_2012" ] || { err "Missing $FW_PATH_2012"; return; }
-        msg "Flashing Disk Mode firmware..."
-        flash_with_dfuutil "$WTF_DEVICE_2012" "$FW_PATH_2012" || return
-
-        sleep 5
-        FINAL_MSE_2012="$FIRMWARES_DIR/2012/Firmware.MSE"
-        [ -f "$IPOD_SCSI" ] || { err "ipodscsi not found."; return; }
-        [ -f "$FINAL_MSE_2012" ] || { err "Missing Firmware.MSE."; return; }
-
-        warn "[!] Flashing the wrong disk may harm your computer! Choose carefully."
-        echo -e "\n${CYAN}→ All drives/devices:${RESET}"
-        lsblk -d -o NAME,SIZE,MODEL | sed 's/^/   /'
-        echo
-        ask "Input the correct device (e.g., /dev/sda): "
-        read -r IPOD_DEVICE
-
-        if [[ -z "$IPOD_DEVICE" || ! -b "$IPOD_DEVICE" ]]; then
-            err "Invalid or missing block device: $IPOD_DEVICE"
-            read -rp "Press ENTER to return..."
-            return
-        fi
-
-        sudo "$IPOD_SCSI" "$IPOD_DEVICE" writefirmware -r -p "$FINAL_MSE_2012"
-        ok "Firmware flashed via ipodscsi."
-
-        echo
-        warn "Still stuck in white screen?"
-        echo -e "${CYAN}→ Hold SLEEP + HOME → Recovery Mode → Restore via iTunes${RESET}"
-    fi
-
-    read -rp "Press ENTER to return..."
-}
 
 
-# ---- Unbrick 2015 ----
-unbrick_2015() {
-    download_firmwares
-    msg "Put your iPod nano 7G (2015) into DFU mode"
-    echo -e "${CYAN}→ USB-A to Lightning + Hold SLEEP + HOME until black screen${RESET}"
-    read -rp "Press ENTER when ready..."
-    wait_for_usb "$DFU_DEVICE_7G" || return
 
-    [ -f "$WTF_PATH_2015" ] || { err "Missing WTF: $WTF_PATH_2015"; return; }
-    msg "Flashing WTF firmware..."
-    flash_with_dfuutil "$DFU_DEVICE_7G" "$WTF_PATH_2015" || return
-
-    sleep 5
-    wait_for_usb "$WTF_DEVICE_2015" || { err "WTF mode not detected."; return; }
-
-    ok "Device in WTF Mode. Disk Mode firmware available."
-    ask "Flash it? (y/n): "
-    read -r confirm
-    confirm="${confirm,,}"
-
-    if [[ "$confirm" == "y" ]]; then
-        [ -f "$FW_PATH_2015" ] || { err "Missing $FW_PATH_2015"; return; }
-        msg "Flashing Disk Mode firmware..."
-        flash_with_dfuutil "$WTF_DEVICE_2015" "$FW_PATH_2015" || return
-
-        sleep 5
-        FINAL_MSE_2015="$FIRMWARES_DIR/2015/Firmware.MSE"
-        [ -f "$IPOD_SCSI" ] || { err "ipodscsi not found."; return; }
-        [ -f "$FINAL_MSE_2015" ] || { err "Missing Firmware.MSE."; return; }
-
-        warn "[!] Flashing the wrong disk may harm your computer! Choose carefully."
-        echo -e "\n${CYAN}→ All drives/devices:${RESET}"
-        lsblk -d -o NAME,SIZE,MODEL | sed 's/^/   /'
-        echo
-        ask "Input the correct device (e.g., /dev/sda): "
-        read -r IPOD_DEVICE
-
-        if [[ -z "$IPOD_DEVICE" || ! -b "$IPOD_DEVICE" ]]; then
-            err "Invalid or missing block device: $IPOD_DEVICE"
-            read -rp "Press ENTER to return..."
-            return
-        fi
-
-        sudo "$IPOD_SCSI" "$IPOD_DEVICE" writefirmware -r -p "$FINAL_MSE_2015"
-        ok "Firmware flashed via ipodscsi."
-
-        echo
-        warn "Still stuck in white screen?"
-        echo -e "${CYAN}→ Hold SLEEP + HOME → Recovery Mode → Restore via iTunes${RESET}"
-    fi
-
-    read -rp "Press ENTER to return..."
-}
 
 # ---- Unbrick 6G ----
 unbrick_6g() {
     download_firmwares
     msg "Put your iPod nano 6G into DFU mode"
-    echo -e "${CYAN}→ Hold MENU + CENTER until black screen, then plug USB${RESET}"
+    echo -e "${CYAN}→ Hold VOLUME DOWN + POWER until black screen + connection sound.${RESET}"
     read -rp "Press ENTER when ready..."
     wait_for_usb "$DFU_DEVICE_6G" || return
 
@@ -318,23 +237,159 @@ unbrick_6g() {
 }
 
 
+# ---- Auto-detect and Unbrick iPod Nano 7G ----
+unbrick_7g() {
+    download_firmwares
+    msg "Put your iPod nano 7G into DFU mode"
+    echo -e "${CYAN}→ USB-A to Lightning + Hold SLEEP + HOME until black screen + connection sound.${RESET}"
+    read -rp "Press ENTER when ready..."
+    wait_for_usb "$DFU_DEVICE_7G" || return
+
+    [ -f "$WTF_PATH_2012" ] || { err "Missing WTF firmware: $WTF_PATH_2012"; return; }
+    msg "Flashing WTF firmware..."
+    flash_with_dfuutil "$DFU_DEVICE_7G" "$WTF_PATH_2012" || return
+
+    sleep 5
+
+    msg "Detecting iPod model..."
+    detected=false
+    for i in {1..20}; do
+        if lsusb | grep -i "$WTF_DEVICE_2012" > /dev/null; then
+            MODEL="2012"
+            WTF_DEVICE="$WTF_DEVICE_2012"
+            FW_PATH="$FW_PATH_2012"
+            FINAL_MSE="$FIRMWARES_DIR/2012/Firmware.MSE"
+            ok "Detected iPod Nano 7G (2012)"
+            detected=true
+            break
+        elif lsusb | grep -i "$WTF_DEVICE_2015" > /dev/null; then
+            MODEL="2015"
+            WTF_DEVICE="$WTF_DEVICE_2015"
+            FW_PATH="$FW_PATH_2015"
+            FINAL_MSE="$FIRMWARES_DIR/2015/Firmware.MSE"
+            ok "Detected iPod Nano 7G (2015)"
+            detected=true
+            break
+        fi
+        sleep 1
+    done
+    if ! $detected; then
+        err "Could not detect iPod model after flashing WTF firmware."
+        return
+    fi
+
+    ask "Flash Disk Mode firmware for $MODEL? (y/n): "
+    read -r confirm
+    confirm="${confirm,,}"
+
+    if [[ "$confirm" == "y" ]]; then
+        [ -f "$FW_PATH" ] || { err "Missing Disk Mode firmware: $FW_PATH"; return; }
+        msg "Flashing Disk Mode firmware..."
+        flash_with_dfuutil "$WTF_DEVICE" "$FW_PATH" || return
+
+        sleep 5
+        [ -f "$IPOD_SCSI" ] || { err "ipodscsi not found."; return; }
+        [ -f "$FINAL_MSE" ] || { err "Missing Firmware.MSE."; return; }
+
+        warn "[!] Flashing the wrong disk may harm your computer! Choose carefully."
+        echo -e "\n${CYAN}→ All drives/devices:${RESET}"
+        lsblk -d -o NAME,SIZE,MODEL | sed 's/^/   /'
+        echo
+        ask "Input the correct device (e.g., /dev/sda): "
+        read -r IPOD_DEVICE
+
+        if [[ -z "$IPOD_DEVICE" || ! -b "$IPOD_DEVICE" ]]; then
+            err "Invalid or missing block device: $IPOD_DEVICE"
+            read -rp "Press ENTER to return..."
+            return
+        fi
+
+        sudo "$IPOD_SCSI" "$IPOD_DEVICE" writefirmware -r -p "$FINAL_MSE"
+        ok "Firmware flashed via ipodscsi."
+
+        echo
+        warn "Still stuck in white screen?"
+        echo -e "${CYAN}→ Hold SLEEP + HOME → Recovery Mode → Restore via iTunes${RESET}"
+    fi
+
+    read -rp "Press ENTER to return..."
+}
+
+# ---- Show Credits ----
+show_credits() {
+    clear
+    echo -e "${CYAN}=========================================${RESET}"
+    echo -e "${BOLD}${CYAN}               Credits               ${RESET}"
+    echo -e "${CYAN}=========================================${RESET}"
+    echo
+    echo -e "${GREEN}${BOLD}## 🙌 Special Thanks${RESET}"
+    echo
+    echo "Huge appreciation to the amazing contributors and community members who made this project possible:"
+    echo
+    echo -e "${YELLOW}- ${BOLD}@LycanLD${RESET}${YELLOW} — Creator of LeUnBrIck and lead developer${RESET}"
+    echo -e "${YELLOW}- ${BOLD}@Ruff${RESET}${YELLOW} — Packaging, testing, and distribution${RESET}"
+    echo -e "${YELLOW}- ${BOLD}@nfzerox${RESET}${YELLOW} — For ipod_theme${RESET}"
+    echo -e "${YELLOW}- ${BOLD}@CUB3D${RESET}${YELLOW} - For ipod_sun${RESET}"
+    echo -e "${YELLOW}- ${BOLD}@freemyipod${RESET}${YELLOW} — For wInd3x, freemyipod and ipodscsi${RESET}"
+    echo -e "${YELLOW}- ${BOLD}@Stefan-Schmidt${RESET}${YELLOW} — For dfu_utils${RESET}"
+    echo -e "${YELLOW}- ${BOLD}@760ceb3b9c0ba4872cadf3ce35a7a494${RESET}${YELLOW} — For ipodhax and other IPSW unpacking scripts (+ He helped me unbrick mine the hard way)${RESET}"
+    echo -e "${YELLOW}- ${BOLD}@Zeehondie${RESET}${YELLOW} — Cuz he's a seal${RESET}"
+    echo
+    echo -e "${BLUE}---${RESET}"
+    echo
+    echo -e "${GREEN}${BOLD}## 💬 Join the Community${RESET}"
+    echo
+    echo "Want help, mods, or just to show off your themed iPod? Join us on Discord:"
+    echo
+    echo -e "${CYAN}- 🎨 ${BOLD}iPod Theme Discord${RESET}${CYAN}: https://discord.com/invite/SfWYYPUAEZ${RESET}"
+    echo -e "${CYAN}- 🔧 ${BOLD}iPod Modding Discord${RESET}${CYAN}: https://discord.com/invite/7PnGEXjW3X${RESET}"
+    echo
+    echo -e "${BLUE}---${RESET}"
+    echo
+    echo -e "${GREEN}${BOLD}## ⭐Remember to give this project a star if you like it / if it worked for you.🌟${RESET}"
+    echo
+    echo -e "${BLUE}---${RESET}"
+    echo
+    echo -e "${GREEN}${BOLD}## 📜 License${RESET}"
+    echo
+    echo "MIT License — free to use, fork, and modify."
+    echo "Contributions welcome!"
+    echo
+    echo -e "${BLUE}---${RESET}"
+    echo
+    echo -e "${GREEN}${BOLD}## ✨ Created by [Lycan](https://github.com/lycanld)${RESET}"
+    echo
+    echo -e "${YELLOW}### 📦 Distributed by ${BOLD}Ruff's Softwares & Games${RESET}${YELLOW}${RESET}"
+    echo
+    echo -e "${CYAN}=========================================${RESET}"
+    read -rp "Press ENTER to return to menu..."
+}
+
 # ---- Main Menu ----
 main_menu() {
+    # Check dependencies
+    if ! check_dependencies; then
+        install_required_packages
+    fi
+
     while true; do
         print_banner
-        echo -e "${BOLD}1)${RESET} Unbrick iPod Nano 7G (2012)"
-        echo -e "${BOLD}2)${RESET} Unbrick iPod Nano 7G (2015)"
-        echo -e "${BOLD}3)${RESET} Unbrick iPod Nano 6G"
-        echo -e "${BOLD}4)${RESET} Install Required Files/Packages (Recommended to run before unbricking!)"
-        echo -e "${BOLD}5)${RESET} Quit"
-        ask "Choose an option: "
+        echo -e "${CYAN}=========================================${RESET}"
+        echo -e "${BOLD}Select an option:${RESET}"
+        echo "1. Unbrick iPod Nano 6G"
+        echo "2. Unbrick iPod Nano 7G (2012/2015)"
+        echo "3. Install Required Files/Packages"
+        echo "4. Credits"
+        echo "5. Quit"
+        echo -e "${CYAN}=========================================${RESET}"
+        ask "Choice: "
         read -r opt
 
         case $opt in
-            1) unbrick_2012 ;;
-            2) unbrick_2015 ;;
-            3) unbrick_6g ;;
-            4) install_required_packages ;;
+            1) unbrick_6g ;;
+            2) unbrick_7g ;;
+            3) install_required_packages ;;
+            4) show_credits ;;
             5) clear; exit 0 ;;
             *) warn "Invalid option." ; sleep 1 ;;
         esac
