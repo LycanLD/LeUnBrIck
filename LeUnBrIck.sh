@@ -41,6 +41,8 @@ WTF_DEVICE_2012="05ac:1249"
 WTF_DEVICE_2015="05ac:124a"
 WTF_DEVICE_6G="05ac:1248"
 
+USER_CHOICE=""
+
 # ---- UI Helpers ----
 print_banner() {
     clear
@@ -67,7 +69,7 @@ install_required_packages() {
     msg "Installing required packages..."
 
     if command -v apt &>/dev/null; then
-        sudo apt update && sudo apt install -y git golang libusb-1.0-0-dev dfu-util make usb-utils
+        sudo apt update && sudo apt install -y git golang libhidapi-libusb0 dfu-util make usbutils
     elif command -v dnf &>/dev/null; then
         sudo dnf install -y git golang libusbx-devel dfu-util make
     elif command -v pacman &>/dev/null; then
@@ -106,33 +108,35 @@ check_dependencies() {
 
 # ---- Download Firmwares ----
 download_firmwares() {
-    msg "Checking for missing firmware files..."
-
-    mkdir -p "$FIRMWARES_DIR/2012" "$FIRMWARES_DIR/2015" "$FIRMWARES_DIR/6G"
+    local model="$1"
+    msg "Checking for missing firmware files for $model..."
 
     FIRMWARE_URL_2012="https://github.com/lycanld/LeUnBrIck/releases/download/hidden/firmware_2012.zip"
     FIRMWARE_URL_2015="https://github.com/lycanld/LeUnBrIck/releases/download/hidden/firmware_2015.zip"
     FIRMWARE_URL_6G="https://github.com/lycanld/LeUnBrIck/releases/download/hidden/firmware_6G.zip"
 
-    if [ ! -f "$FIRMWARES_DIR/2012/Firmware.MSE" ]; then
-        msg "Downloading firmware for 2012 iPod..."
-        wget -O /tmp/fw2012.zip "$FIRMWARE_URL_2012" || { err "Download failed."; return; }
-        unzip -o /tmp/fw2012.zip -d "$FIRMWARES_DIR/2012/"
-        ok "Extracted 2012 firmware."
-    fi
-
-    if [ ! -f "$FIRMWARES_DIR/2015/Firmware.MSE" ]; then
-        msg "Downloading firmware for 2015 iPod..."
-        wget -O /tmp/fw2015.zip "$FIRMWARE_URL_2015" || { err "Download failed."; return; }
-        unzip -o /tmp/fw2015.zip -d "$FIRMWARES_DIR/2015/"
-        ok "Extracted 2015 firmware."
-    fi
-
-    if [ ! -f "$FIRMWARES_DIR/6G/Firmware.MSE" ]; then
-        msg "Downloading firmware for iPod nano 6G..."
-        wget -O /tmp/fw6g.zip "$FIRMWARE_URL_6G" || { err "Download failed."; return; }
-        unzip -o /tmp/fw6g.zip -d "$FIRMWARES_DIR/6G/"
-        ok "Extracted 6G firmware."
+    if [ "$model" = "6G" ]; then
+        mkdir -p "$FIRMWARES_DIR/6G"
+        if [ ! -f "$FIRMWARES_DIR/6G/Firmware.MSE" ]; then
+            msg "Downloading firmware for iPod nano 6G..."
+            wget -O /tmp/fw6g.zip "$FIRMWARE_URL_6G" || { err "Download failed."; return; }
+            unzip -o /tmp/fw6g.zip -d "$FIRMWARES_DIR/6G/"
+            ok "Extracted 6G firmware."
+        fi
+    elif [ "$model" = "7G" ]; then
+        mkdir -p "$FIRMWARES_DIR/2012" "$FIRMWARES_DIR/2015"
+        if [ ! -f "$FIRMWARES_DIR/2012/Firmware.MSE" ]; then
+            msg "Downloading firmware for 2012 iPod..."
+            wget -O /tmp/fw2012.zip "$FIRMWARE_URL_2012" || { err "Download failed."; return; }
+            unzip -o /tmp/fw2012.zip -d "$FIRMWARES_DIR/2012/"
+            ok "Extracted 2012 firmware."
+        fi
+        if [ ! -f "$FIRMWARES_DIR/2015/Firmware.MSE" ]; then
+            msg "Downloading firmware for 2015 iPod..."
+            wget -O /tmp/fw2015.zip "$FIRMWARE_URL_2015" || { err "Download failed."; return; }
+            unzip -o /tmp/fw2015.zip -d "$FIRMWARES_DIR/2015/"
+            ok "Extracted 2015 firmware."
+        fi
     fi
 }
 
@@ -184,7 +188,7 @@ flash_with_dfuutil() {
 
 # ---- Unbrick 6G ----
 unbrick_6g() {
-    download_firmwares
+    download_firmwares "6G"
     msg "Put your iPod nano 6G into DFU mode"
     echo -e "${CYAN}→ Hold VOLUME DOWN + POWER until black screen + connection sound.${RESET}"
     read -rp "Press ENTER when ready..."
@@ -216,14 +220,29 @@ unbrick_6g() {
         echo -e "\n${CYAN}→ All drives/devices:${RESET}"
         lsblk -d -o NAME,SIZE,MODEL | sed 's/^/   /'
         echo
-        ask "Input the correct device (e.g., /dev/sda): "
-        read -r IPOD_DEVICE
+        echo -e "${YELLOW}Note: The correct disk should be labeled 'iPod' in the MODEL column.${RESET}"
+        echo
 
-        if [[ -z "$IPOD_DEVICE" || ! -b "$IPOD_DEVICE" ]]; then
-            err "Invalid or missing block device: $IPOD_DEVICE"
-            read -rp "Press ENTER to return..."
-            return
-        fi
+        while true; do
+            ask "Input the correct device (e.g., sda or /dev/sda): "
+            read -r IPOD_DEVICE
+
+            # Auto-prepend /dev/ if user typed only the short name
+            [[ "$IPOD_DEVICE" != /dev/* ]] && IPOD_DEVICE="/dev/$IPOD_DEVICE"
+
+            if [[ -z "$IPOD_DEVICE" || ! -b "$IPOD_DEVICE" ]]; then
+                err "Invalid or missing block device: $IPOD_DEVICE"
+                continue
+            fi
+
+            ask "You selected $IPOD_DEVICE. Type YES to confirm: "
+            read -r really
+            if [[ "$really" == "YES" ]]; then
+                break
+            else
+                warn "Aborted by user. Please try again."
+            fi
+        done
 
         sudo "$IPOD_SCSI" "$IPOD_DEVICE" writefirmware -r -p "$FINAL_MSE_6G"
         ok "Firmware flashed via ipodscsi."
@@ -239,7 +258,7 @@ unbrick_6g() {
 
 # ---- Auto-detect and Unbrick iPod Nano 7G ----
 unbrick_7g() {
-    download_firmwares
+    download_firmwares "7G"
     msg "Put your iPod nano 7G into DFU mode"
     echo -e "${CYAN}→ USB-A to Lightning + Hold SLEEP + HOME until black screen + connection sound.${RESET}"
     read -rp "Press ENTER when ready..."
@@ -295,14 +314,29 @@ unbrick_7g() {
         echo -e "\n${CYAN}→ All drives/devices:${RESET}"
         lsblk -d -o NAME,SIZE,MODEL | sed 's/^/   /'
         echo
-        ask "Input the correct device (e.g., /dev/sda): "
-        read -r IPOD_DEVICE
+        echo -e "${YELLOW}Note: The correct disk should be labeled 'iPod' in the MODEL column.${RESET}"
+        echo
 
-        if [[ -z "$IPOD_DEVICE" || ! -b "$IPOD_DEVICE" ]]; then
-            err "Invalid or missing block device: $IPOD_DEVICE"
-            read -rp "Press ENTER to return..."
-            return
-        fi
+        while true; do
+            ask "Input the correct device (e.g., sda or /dev/sda): "
+            read -r IPOD_DEVICE
+
+            # Auto-prepend /dev/ if user typed only the short name
+            [[ "$IPOD_DEVICE" != /dev/* ]] && IPOD_DEVICE="/dev/$IPOD_DEVICE"
+
+            if [[ -z "$IPOD_DEVICE" || ! -b "$IPOD_DEVICE" ]]; then
+                err "Invalid or missing block device: $IPOD_DEVICE"
+                continue
+            fi
+
+            ask "You selected $IPOD_DEVICE. Type YES to confirm: "
+            read -r really
+            if [[ "$really" == "YES" ]]; then
+                break
+            else
+                warn "Aborted by user. Please try again."
+            fi
+        done
 
         sudo "$IPOD_SCSI" "$IPOD_DEVICE" writefirmware -r -p "$FINAL_MSE"
         ok "Firmware flashed via ipodscsi."
@@ -386,8 +420,8 @@ main_menu() {
         read -r opt
 
         case $opt in
-            1) unbrick_6g ;;
-            2) unbrick_7g ;;
+            1) USER_CHOICE="6G"; unbrick_6g ;;
+            2) USER_CHOICE="7G"; unbrick_7g ;;
             3) install_required_packages ;;
             4) show_credits ;;
             5) clear; exit 0 ;;
