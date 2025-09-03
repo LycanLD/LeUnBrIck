@@ -27,10 +27,7 @@
       --code: #222;
     }
 
-    * {
-      box-sizing: border-box;
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -40,29 +37,18 @@
       padding: 2rem 1rem;
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
+    header { text-align: center; margin-bottom: 2rem; position: relative; }
 
     header img {
-      width: 100%;
-      max-width: 850px;
+      max-width: 100%;
       height: auto;
       border-radius: 16px;
       box-shadow: 0 0 10px rgba(255,255,255,0.05);
       margin-bottom: 1.2rem;
     }
 
-    h1 {
-      font-size: 2.5rem;
-      margin: 0.5rem 0;
-    }
-
-    .subheading {
-      font-size: 1.1rem;
-      color: #ccc;
-    }
+    h1 { font-size: 2.5rem; margin: 0.5rem 0; line-height: 1.2; }
+    .subheading { font-size: 1.1rem; color: #ccc; }
 
     .content {
       max-width: 850px;
@@ -80,14 +66,8 @@
       margin-top: 2rem;
     }
 
-    a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
 
     code {
       background: var(--code);
@@ -96,10 +76,7 @@
       font-family: monospace;
     }
 
-    ol, ul {
-      padding-left: 1.5rem;
-    }
-
+    ol, ul { padding-left: 1.5rem; }
     .button {
       display: inline-block;
       margin-top: 1rem;
@@ -112,60 +89,42 @@
       font-size: 1rem;
       transition: 0.3s ease;
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      text-decoration: none;
+      text-align: center;
     }
-
-    .button:hover {
-      filter: brightness(1.15);
-      transform: scale(1.03);
-    }
+    .button:hover { filter: brightness(1.15); transform: scale(1.03); }
 
     .github-corner {
-      fill: var(--accent);
-      color: #000;
       position: absolute;
       top: 0;
       right: 0;
+      width: 70px;
+      height: 70px;
+      z-index: 1000;
     }
 
-    footer {
-      text-align: center;
-      margin-top: 3rem;
-      font-size: 0.9em;
-      color: var(--muted);
-    }
+    footer { text-align: center; margin-top: 3rem; font-size: 0.9em; color: var(--muted); }
 
     @media (max-width: 768px) {
-      .content {
-        padding: 1.2rem;
-      }
-
-      h1 {
-        font-size: 2rem;
-      }
-
-      header img {
-        max-width: 90%;
-      }
+      .content { padding: 1.2rem; }
+      h1 { font-size: 2rem; }
+      header img { max-width: 90%; }
     }
   </style>
 </head>
 <body>
 
   <!-- GitHub Corner -->
-  <a href="https://github.com/lycanld/LeUnBrIck" class="github-corner" aria-label="View source on GitHub" style="position: absolute; top: 0; right: 0; z-index: 1000; width: 70px; height: 70px; display: block;">
-    <svg width="90" height="90" viewBox="0 0 80 80" style="position: absolute; top: 0; right: 0;" aria-hidden="true">
-      <polygon points="80,0 80,80 0,0" fill="#66ccff"/>
-    </svg>
-    <img src="assets/github.png" alt="GitHub" style="position: absolute; top: 10px; right: 10px; width: 36px; height: 36px; object-fit: contain; filter: drop-shadow(0 1px 4px #0008);" />
+  <a href="https://github.com/lycanld/LeUnBrIck" class="github-corner" aria-label="View source on GitHub">
+    <img src="assets/github.png" alt="GitHub" style="width:70px;height:70px;object-fit:contain;filter:drop-shadow(0 1px 4px #0008);" />
   </a>
 
   <header>
     <img src="assets/banner.png" alt="LeUnBrIck Banner" />
     <h1>🎧 LeUnBrIck</h1>
     <p class="subheading">Universal Unbricker & Flasher for iPod Nano 6G & 7G (2012 / 2015)</p>
-    <a class="button" href="https://github.com/lycanld/LeUnBrIck" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5em;">
-      <img src="assets/github.png" alt="GitHub" style="width:1.3em; height:1.3em; display:inline-block; margin-bottom:-0.15em; margin-right:0.3em;" />
-      <span style="display:inline-block; vertical-align:middle;">View on GitHub</span>
+    <a class="button" href="https://github.com/lycanld/LeUnBrIck" target="_blank">
+      <img src="assets/github.png" alt="GitHub" style="width:1.3em; height:1.3em; margin-right:0.5em; vertical-align:middle;" /> View on GitHub
     </a>
   </header>
 
@@ -193,7 +152,7 @@
           <li>iPod Nano 6G</li>
         </ul>
       </li>
-      <li>Auto-fetch firmware files from AppleDB.dev if missing</li>
+      <li>Auto-fetch firmware files if missing</li>
       <li>Supports flashing via wInd3x and ipodscsi (Linux/macOS)</li>
       <li>Color-coded terminal UI</li>
     </ul>
@@ -238,4 +197,3 @@
   </div>
 </body>
 </html>
-
