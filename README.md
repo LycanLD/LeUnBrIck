@@ -89,7 +89,7 @@ chmod +x LeUnBrIck.sh
 * [x] Support for both 2012 and 2015 Nano 7G
 * [x] macOS support (accidental but works)
 * [x] Safer device selection (not locked to `/dev/sda`)
-* [ ] Improve automatic detection for iPod revisions
+* [X] Improve automatic detection for iPod revisions
 * [ ] Windows support
 
 ---
