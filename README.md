@@ -63,7 +63,7 @@ chmod +x LeUnBrIck.sh
 ````
 
 ### Windows (BETA)
-
+0. Clone the repository `git clone https://github.com/lycanld/LeUnBrIck.git`
 1. Double-click `LeUnBrIck_Windows.bat` (or run in a Command Prompt)
 2. The script will:
 
