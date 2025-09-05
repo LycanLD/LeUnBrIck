@@ -55,7 +55,7 @@ def print_banner():
 {RESET}
 {BOLD}{CYAN}============== Le UnBrIck ==============={RESET}
 {BLUE}★ iPod Nano 6G/7G Unbrick/Restore Tool ★{RESET}
-{CYAN}    Made by Lycan  |  Ver: 1.4WBETA1   {RESET}
+{CYAN}    Made by Lycan  |  Ver: 1.4.1W  {RESET}
 {CYAN}========================================={RESET}
 """)
 
