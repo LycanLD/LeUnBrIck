@@ -51,7 +51,7 @@
     .subheading { font-size: 1.1rem; color: #ccc; }
 
     .content {
-      max-width: 850px;
+      max-width: 900px;
       margin: auto;
       background-color: var(--card);
       padding: 2rem;
@@ -130,55 +130,54 @@
 
   <div class="content">
     <h2>⚡ What is LeUnBrIck?</h2>
-    <p><strong>LeUnBrIck.sh</strong> is a terminal-based bash script to recover bricked iPod Nano devices using DFU/WTF modes, Apple firmware, and tools like <code>wInd3x</code> and <code>ipodscsi</code>.</p>
+    <p><strong>LeUnBrIck</strong> is an all-in-one toolkit to restore bricked iPod Nano 6G & 7G devices. It supports both 2012 & 2015 models and works cross-platform with Linux, macOS, and Windows (BETA).</p>
 
     <h2>📥 How to Use</h2>
+
+    <h3>Linux / macOS</h3>
     <ol>
-      <li>Clone the repository: <code>git clone https://github.com/lycanld/LeUnBrIck</code></li>
+      <li>Clone the repository: <code>git clone https://github.com/lycanld/LeUnBrIck.git</code></li>
       <li>Change directory: <code>cd LeUnBrIck</code></li>
       <li>Make it executable: <code>chmod +x LeUnBrIck.sh</code></li>
       <li>Run the script: <code>./LeUnBrIck.sh</code></li>
       <li>Follow the terminal UI to select your model and flash firmware</li>
     </ol>
 
+    <h3>Windows (BETA)</h3>
+    <ol>
+      <li>Clone the repository: <code>git clone https://github.com/lycanld/LeUnBrIck.git</code></li>
+      <li>Double-click <code>LeUnBrIck_Windows.bat</code> or run in Command Prompt</li>
+      <li>The script will check Python, install <code>requests</code> if missing, and run <code>main.py</code></li>
+      <li>Follow on-screen instructions to enter DFU/WTF mode and flash firmware</li>
+    </ol>
+    <p><strong>⚠️ Ensure your iPod is connected before running.</strong></p>
+
     <h2>📁 Features</h2>
     <ul>
-      <li>Automatic detection of DFU/WTF iPods</li>
-      <li>Auto-install required tools (Option 3)</li>
-      <li>Firmware flashing support for:
-        <ul>
-          <li>iPod Nano 7G (2012)</li>
-          <li>iPod Nano 7G (2015)</li>
-          <li>iPod Nano 6G</li>
-        </ul>
-      </li>
-      <li>Auto-fetch firmware files if missing</li>
-      <li>Supports flashing via wInd3x and ipodscsi (Linux/macOS)</li>
+      <li>Restore iPod Nano 6G & 7G (2012 & 2015)</li>
+      <li>Flash WTF & firmware images safely</li>
+      <li>Auto-download missing <code>.MSE</code> firmware files</li>
       <li>Color-coded terminal UI</li>
+      <li>Automatic installation of required tools on Linux/macOS</li>
+      <li>Windows Support (BETA)</li>
     </ul>
 
-    <h2>🔗 Resources</h2>
-    <ul>
-      <li><a href="https://github.com/lycanld/LeUnBrIck" target="_blank">GitHub Repository</a></li>
-      <li><a href="https://appledb.dev" target="_blank">AppleDB – Firmware Archive</a></li>
-      <li><a href="https://github.com/freemyipod/wInd3x" target="_blank">wInd3x</a></li>
-      <li><a href="https://freemyipod.org" target="_blank">freemyipod</a></li>
-    </ul>
-
-    <h2>🙌 Special Thanks</h2>
-    <ul>
-      <li><strong>@LycanLD</strong> — Creator of LeUnBrIck and lead developer</li>
-      <li><strong>@Ruff</strong> — Packaging, testing, and distribution</li>
-      <li><strong>@nfzerox</strong> — For ipod_theme</li>
-      <li><strong>@CUB3D</strong> — For ipod_sun</li>
-      <li><strong>@freemyipod</strong> — For wInd3x, freemyipod and ipodscsi</li>
-      <li><strong>@Stefan-Schmidt</strong> — For dfu_utils</li>
-      <li><strong>@760ceb3b9c0ba4872cadf3ce35a7a494</strong> — For ipodhax and IPSW unpacking scripts</li>
-      <li><strong>@Zeehondie</strong> — Cuz he's a seal 🦭</li>
-    </ul>
+    <h2>📁 Folder Structure</h2>
+    <pre style="background:var(--code); padding:1rem; border-radius:8px; overflow-x:auto;">
+.
+├── LeUnBrIck.sh
+├── LeUnBrIck.bat
+├── main.py
+├── wInd3x/
+├── ipodscsi_linux/
+├── firmwares/
+└── assets/
+    ├── banner.png
+    └── discord_qr.png
+    </pre>
 
     <h2>💬 Join the Community</h2>
-    <p>Want help, mods, or just to show off your themed iPod? Join us on Discord:</p>
+    <p>Want help, mods, or to show off your themed iPod? Join us on Discord:</p>
     <ul>
       <li>🎨 <a href="https://discord.com/invite/SfWYYPUAEZ" target="_blank">iPod Theme Discord</a></li>
       <li>🔧 <a href="https://discord.com/invite/7PnGEXjW3X" target="_blank">iPod Modding Discord</a></li>
@@ -186,6 +185,18 @@
     <div style="text-align:center; margin-top: 1rem;">
       <img src="assets/discord_qr.png" alt="Join the iPod Nano Theming Discord" width="200" style="border-radius: 12px; box-shadow: 0 0 12px rgba(255,255,255,0.1);" />
     </div>
+
+    <h2>🙌 Special Thanks</h2>
+    <ul>
+      <li><strong>@LycanLD</strong> — Creator & lead developer</li>
+      <li><strong>@Ruff</strong> — Packaging, testing, distribution</li>
+      <li><strong>@nfzerox</strong> — ipod_theme</li>
+      <li><strong>@CUB3D</strong> — ipod_sun</li>
+      <li><strong>@freemyipod</strong> — wInd3x, freemyipod, ipodscsi</li>
+      <li><strong>@Stefan-Schmidt</strong> — dfu_utils</li>
+      <li><strong>@760ceb3b9c0ba4872cadf3ce35a7a494</strong> — ipodhax & IPSW unpacking scripts</li>
+      <li><strong>@Zeehondie</strong> — Seal inspiration 🦭</li>
+    </ul>
 
     <footer>
       <p>🚀 Made with 💖 by <a href="https://github.com/lycanld">Lycan</a> — MIT Licensed</p>
