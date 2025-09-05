@@ -7,37 +7,46 @@
 > ⚡ Universal Unbricker & Flasher for iPod Nano 6th & 7th Gen (2012 & 2015)
 
 `LeUnBrIck` is an all-in-one toolkit for **restoring bricked iPod Nano 6G / 7G devices** using DFU/WTF mode.  
-It automatically detects 7G hardware revisions (2012 vs. 2015) and provides safe flashing with **wInd3x** or **ipodscsi**.
+It supports both the 2012 and 2015 hardware revisions and provides options to flash using **wInd3x** or **ipodscsi**.
 
 ---
 
 ## 🔧 Features
 
 - ✅ Restore iPod Nano 6G and 7G (2012 & 2015)  
-- ⚡ Flash WTF & firmware images safely with `dfu-util`  
-- ☁️ Auto-download missing `.MSE` firmware files from GitHub  
+- ⚡ Flash WTF & firmware images safely  
+- ☁️ Auto-download missing `.MSE` firmware files  
 - 🎨 Colorful and clean TUI interface  
-- 📦 Automatically installs required tools on major Linux distros  
+- 📦 Automatic installation of required tools on major **Linux** distros  
+- 🪟 **Windows Support (BETA)** via `launch.bat`  
+- 🖥 Cross-platform (Linux, macOS, Windows)  
 
 ---
 
 ## 📥 Requirements
 
-* 🐧 **Linux** (Debian, Arch, Fedora, Alpine, etc.) or **macOS**
+### Linux/macOS
 
-  > ✅ *Recommended: Arch Linux on real hardware (Steam Deck or Live USB works great)*
-* 🪟 **Windows is not supported** (including WSL)  
-  > 💡 *Tip: Boot from a Linux Live USB instead*
-* 🔌 **USB-A to Lightning** cable  
+* 🐧 **Linux** (Debian, Arch, Alpine, etc.) or **macOS**  
+  > ✅ Recommended: Arch Linux on real hardware (Steam Deck or Live USB works)  
+* 🔌 **USB-A to Lightning cable**  
 * 📦 Required packages: `dfu-util`, `libusb`, `make`, `go`, `git`  
 
-🛠 No need to install these manually — just run the built-in installer.
+> 🛠 No need to install manually — the built-in installer handles it.
+
+### Windows (BETA)
+
+* 🪟 Windows 7, 8, 10, 11  
+* 🐍 Python installed and added to PATH  
+* 🔌 **USB-A to Lightning cable**  
+
+> 💡 Tip: Using a Linux Live USB is more reliable for flashing.
 
 ---
 
 ## 🧪 Usage
 
-### 🔹 Step-by-step Guide
+### Linux/macOS
 
 ```bash
 # Clone the repository
@@ -53,15 +62,27 @@ chmod +x LeUnBrIck.sh
 ./LeUnBrIck.sh
 ````
 
-### 🧙 Inside the Menu
+### Windows (BETA)
 
-1. **Option 1** → Unbrick iPod Nano **6G**
-2. **Option 2** → Unbrick iPod Nano **7G (auto-detects 2012 / 2015)**
-3. **Option 3** → Install required tools & files
-4. **Option 4** → View credits
-5. **Option 5** → Quit
+1. Double-click `LeUnBrIck_Windows.bat` (or run in a Command Prompt)
+2. The script will:
 
-> 💡 Just follow on-screen instructions to enter **DFU mode**, then **WTF mode**, and finish flashing.
+   * Check for Python
+   * Install `requests` if missing
+   * Run `main.py`
+3. Follow on-screen instructions to enter DFU/WTF mode and complete flashing
+
+> ⚠️ Ensure your iPod is connected before running.
+
+---
+
+### 🧙 Inside the Menu (Linux/macOS/Windows)
+
+1. **Option 3** — Install required packages
+2. **Option 2** — 2012/2015 iPod Nano 7G
+3. **Option 1** — iPod Nano 6G
+4. Follow instructions to enter DFU/WTF mode and flash
+5. **Option 4** — Credits
 
 ---
 
@@ -70,12 +91,14 @@ chmod +x LeUnBrIck.sh
 ```
 .
 ├── LeUnBrIck.sh               # Main Bash script
+├── LeUnBrIck.bat              # Windows launcher (BETA)
+├── main.py                    # Main Python script (Windows)
 ├── wInd3x/                    # wInd3x restore tool
 ├── ipodscsi_linux/            # ipodscsi restore utility
-├── firmwares/                 # Auto-downloaded WTF/Firmware files
+├── firmwares/                 # WTF/Firmware files (auto-downloaded)
 ├── assets/
 │   ├── banner.png             # GitHub banner image
-│   └── discord_qr.png         # QR code for Discord
+│   └── discord_qr.png         # Discord QR code
 ```
 
 ---
@@ -83,43 +106,40 @@ chmod +x LeUnBrIck.sh
 ## 📌 TODO
 
 * [x] Nano 6G support
-* [x] Auto-download `.MSE` files from GitHub
-* [x] Improved interface (TUI)
-* [ ] GUI (Qt / Tkinter)
-* [x] Support for both 2012 and 2015 Nano 7G
+* [x] Auto-download `.MSE` files
+* [x] Upgraded TUI interface
+* [ ] GUI (QT / Tkinter) - Soon
+* [x] Support both 2012 and 2015 hardware
 * [x] macOS support (accidental but works)
-* [x] Safer device selection (not locked to `/dev/sda`)
-* [X] Improve automatic detection for iPod revisions
-* [ ] Windows support
+* [x] Custom firmware flashing device (not locked to `/dev/sda`)
+* [X] Improve detection of iPod revision
+* [x] Windows support (BETA)
 
 ---
 
 ## ⚠️ Notes
 
-* GitHub does **not allow files over 100MB**, so `.MSE` files are **not included**.
-* The script will **automatically download** missing firmware files when needed.
-* Seeing `LIBUSB_ERROR_NO_DEVICE` at the end of flashing is **normal** and expected.
+* GitHub does **not allow files >100MB**, so `.MSE` files are **not included**
+* Script auto-downloads missing firmware files when needed
+* Seeing `LIBUSB_ERROR_NO_DEVICE` at the end of flashing is **normal**
+* Windows support is **BETA**; Linux/macOS is recommended for reliability
 
 ---
 
 ## 🙌 Special Thanks
 
-Huge appreciation to the amazing contributors and community members who made this project possible:
-
-* **@LycanLD** — Creator of LeUnBrIck and lead developer
-* **@Ruff** — Packaging, testing, and distribution
-* **@nfzerox** — For ipod\_theme
-* **@CUB3D** — For ipod\_sun
-* **@freemyipod** — For wInd3x, freemyipod, and ipodscsi
-* **@Stefan-Schmidt** — For dfu\_utils
-* **@760ceb3b9c0ba4872cadf3ce35a7a494** — For ipodhax & IPSW unpacking (+ helped me unbrick mine the hard way)
-* **@Zeehondie** — Cuz he's a seal 🦭
+* **@LycanLD** — Creator & lead developer
+* **@Ruff** — Packaging, testing, distribution
+* **@nfzerox** — ipod\_theme
+* **@CUB3D** — ipod\_sun
+* **@freemyipod** — wInd3x, freemyipod, ipodscsi
+* **@Stefan-Schmidt** — dfu\_utils
+* **@760ceb3b9c0ba4872cadf3ce35a7a494** — ipodhax & IPSW unpacking
+* **@Zeehondie** — Seal inspiration
 
 ---
 
 ## 💬 Join the Community
-
-Need help, mods, or want to show off your themed iPod? Join us on Discord:
 
 * 🎨 **iPod Theme Discord**: [https://discord.com/invite/SfWYYPUAEZ](https://discord.com/invite/SfWYYPUAEZ)
 * 🔧 **iPod Modding Discord**: [https://discord.com/invite/7PnGEXjW3X](https://discord.com/invite/7PnGEXjW3X)
@@ -130,14 +150,13 @@ Need help, mods, or want to show off your themed iPod? Join us on Discord:
 
 ---
 
-## ⭐ Remember to give this project a star if it helped you 🌟
+## ⭐ Give this project a star if it worked for you! 🌟
 
 ---
 
 ## 📜 License
 
-MIT License — free to use, fork, and modify.
-Contributions welcome!
+MIT License — free to use, fork, and modify. Contributions welcome.
 
 ---
 

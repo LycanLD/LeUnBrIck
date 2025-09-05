@@ -21,10 +21,10 @@ if [[ -n "${NO_COLOR-}" ]]; then
     RED=''; GREEN=''; YELLOW=''; BLUE=''; CYAN=''; BOLD=''; RESET=''
 fi
 
-DFU_UTILS_DIR="./dfu_utils"
-WIND3X_DIR="./wInd3x"
-FIRMWARES_DIR="./firmwares"
-IPOD_SCSI="./ipodscsi_linux/ipodscsi"
+DFU_UTILS_DIR="./misc/dfu_utils"
+WIND3X_DIR="./misc/wInd3x"
+FIRMWARES_DIR="./misc/firmwares"
+IPOD_SCSI="./misc/ipodscsi_linux/ipodscsi"
 
 WTF_PATH_2012="$FIRMWARES_DIR/2012_DFU/WTF.x1234.RELEASE.dfu"
 FW_PATH_2012="$FIRMWARES_DIR/2012_DFU/FIRMWARE.x1249.RELEASE.dfu"
