@@ -2,7 +2,7 @@
   <img src="assets/banner.png" alt="LeUnBrIck Banner" />
 </p>
 
-# 🎧 LeUnBrIck
+# 🎧 LeUnBrIck (Now supports Windows)
 
 > ⚡ Universal Unbricker & Flasher for iPod Nano 6th & 7th Gen (2012 & 2015)
 
