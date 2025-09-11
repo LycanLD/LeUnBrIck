@@ -91,7 +91,7 @@ chmod +x LeUnBrIck.sh
 ```
 .
 ├── LeUnBrIck.sh               # Main Bash script
-├── LeUnBrIck.bat              # Windows launcher (BETA)
+├── LeUnBrIck_Windows.bat      # Windows launcher (BETA)
 ├── main.py                    # Main Python script (Windows)
 ├── wInd3x/                    # wInd3x restore tool
 ├── ipodscsi_linux/            # ipodscsi restore utility
