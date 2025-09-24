@@ -13,12 +13,12 @@ It supports both the 2012 and 2015 hardware revisions and provides options to fl
 
 ## 🔧 Features
 
-- ✅ Restore iPod Nano 6G and 7G (2012 & 2015)  
-- ⚡ Flash WTF & firmware images safely  
+- ✅ Restore softbricked iPod Nano 6G and 7G (2012 & 2015)  
+- ⚡ Flash WTF & firmware images safely & easily
 - ☁️ Auto-download missing `.MSE` firmware files  
-- 🎨 Colorful and clean TUI interface  
-- 📦 Automatic installation of required tools on major **Linux** distros  
-- 🪟 **Windows Support (BETA)** via `launch.bat`  
+- 🎨 Clean cli interface
+- 📦 Automatic installation of required tools on **Linux** distros  
+- 🪟 **Windows Support (BETA)** via `LeUnBrIck_Windows.bat`  
 - 🖥 Cross-platform (Linux, macOS, Windows)  
 
 ---
