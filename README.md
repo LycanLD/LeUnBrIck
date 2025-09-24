@@ -110,7 +110,7 @@ chmod +x LeUnBrIck.sh
 * [x] Upgraded TUI interface
 * [ ] GUI (QT / Tkinter) - Soon
 * [x] Support both 2012 and 2015 hardware
-* [x] macOS support (accidental but works)
+* [x] macOS support (NOT TESTED)
 * [x] Custom firmware flashing device (not locked to `/dev/sda`)
 * [X] Improve detection of iPod revision
 * [x] Windows support (BETA)
