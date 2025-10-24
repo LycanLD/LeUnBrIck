@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>LeUnBrIck - iPod Nano Unbricker</title>
   <link rel="icon" href="assets/icon.png" />
+
   <!-- Social Preview -->
   <meta property="og:title" content="LeUnBrIck - iPod Nano Unbricker" />
   <meta property="og:description" content="Universal Unbricker & Flasher for iPod Nano 6G & 7G (2012 / 2015). Recover bricked iPods easily!" />
@@ -15,207 +16,881 @@
   <meta name="twitter:title" content="LeUnBrIck - iPod Nano Unbricker" />
   <meta name="twitter:description" content="Universal Unbricker & Flasher for iPod Nano 6G & 7G (2012 / 2015). Recover bricked iPods easily!" />
   <meta name="twitter:image" content="assets/banner.png" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
     :root {
-      --bg: #0c0c0c;
-      --card: #1a1a1a;
-      --accent: #66ccff;
-      --text: #e0e0e0;
-      --muted: #888;
-      --code: #222;
+      /* Material You Dark Theme Colors */
+      --md-sys-color-background: #0c0c0f;
+      --md-sys-color-surface: #1c1c22;
+      --md-sys-color-surface-variant: #2a2a32;
+      --md-sys-color-surface-container: #24242a;
+      --md-sys-color-surface-container-high: #2e2e36;
+      --md-sys-color-surface-container-highest: #393941;
+      --md-sys-color-primary: #8dcfff;
+      --md-sys-color-on-primary: #003450;
+      --md-sys-color-primary-container: #004b71;
+      --md-sys-color-on-primary-container: #c8e6ff;
+      --md-sys-color-secondary: #b8c8db;
+      --md-sys-color-on-secondary: #233240;
+      --md-sys-color-secondary-container: #394857;
+      --md-sys-color-on-secondary-container: #d4e4f7;
+      --md-sys-color-tertiary: #c8c0e8;
+      --md-sys-color-on-tertiary: #332b4a;
+      --md-sys-color-tertiary-container: #4a4162;
+      --md-sys-color-on-tertiary-container: #e4dfff;
+      --md-sys-color-outline: #8e9099;
+      --md-sys-color-outline-variant: #44474f;
+      --md-sys-color-scrim: #000000;
+      --md-sys-color-shadow: #000000;
+      --md-sys-color-on-surface: #e3e2e9;
+      --md-sys-color-on-surface-variant: #c4c6d0;
+      
+      /* Elevation levels */
+      --level1: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      --level2: 0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+      --level3: 0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.3);
+      --level4: 0px 6px 10px 4px rgba(0, 0, 0, 0.15), 0px 2px 3px 0px rgba(0, 0, 0, 0.3);
+      --level5: 0px 8px 12px 6px rgba(0, 0, 0, 0.15), 0px 4px 4px 0px rgba(0, 0, 0, 0.3);
     }
 
-    * {
-      box-sizing: border-box;
+    * { 
+      box-sizing: border-box; 
       scroll-behavior: smooth;
     }
 
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      padding: 2rem 1rem;
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--md-sys-color-background);
+      color: var(--md-sys-color-on-surface);
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 2rem;
+    /* Material ripple effect */
+    .ripple {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ripple::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .ripple:active::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    /* Animated gradient background */
+    .bg-gradient {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(141, 207, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(200, 192, 232, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(184, 200, 219, 0.06) 0%, transparent 50%);
+      z-index: -1;
+      animation: gradientShift 20s ease infinite;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { opacity: 0.5; transform: scale(1) rotate(0deg); }
+      50% { opacity: 0.8; transform: scale(1.1) rotate(5deg); }
+    }
+
+    /* Header */
+    header { 
+      text-align: center; 
+      padding: 3rem 1rem 2rem;
+      position: relative;
+      background: linear-gradient(180deg, var(--md-sys-color-surface-container) 0%, transparent 100%);
+    }
+
+    .header-content {
+      max-width: 900px;
+      margin: 0 auto;
     }
 
     header img {
-      width: 100%;
-      max-width: 850px;
+      max-width: 100%;
       height: auto;
-      border-radius: 16px;
-      box-shadow: 0 0 10px rgba(255,255,255,0.05);
-      margin-bottom: 1.2rem;
+      border-radius: 28px;
+      box-shadow: var(--level3);
+      margin-bottom: 2rem;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    h1 {
-      font-size: 2.5rem;
-      margin: 0.5rem 0;
+    header img:hover {
+      transform: translateY(-8px) scale(1.02);
     }
 
-    .subheading {
-      font-size: 1.1rem;
-      color: #ccc;
+    h1 { 
+      font-size: 3.5rem; 
+      margin: 0.5rem 0; 
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--md-sys-color-primary) 0%, var(--md-sys-color-tertiary) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
     }
 
-    .content {
-      max-width: 850px;
-      margin: auto;
-      background-color: var(--card);
+    .subheading { 
+      font-size: 1.25rem; 
+      color: var(--md-sys-color-on-surface-variant);
+      max-width: 700px;
+      margin: 1rem auto 2rem;
+      font-weight: 400;
+    }
+
+    /* Main container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* Material Cards */
+    .md-card {
+      background: var(--md-sys-color-surface);
+      border-radius: 24px;
       padding: 2rem;
-      border-radius: 16px;
-      box-shadow: 0 0 24px rgba(255, 255, 255, 0.05);
+      margin-bottom: 1.5rem;
+      box-shadow: var(--level1);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
     }
 
+    .md-card:hover {
+      box-shadow: var(--level3);
+      transform: translateY(-2px);
+    }
+
+    .md-card-elevated {
+      box-shadow: var(--level2);
+    }
+
+    .md-card-elevated:hover {
+      box-shadow: var(--level4);
+    }
+
+    /* Headings */
     h2 {
-      border-left: 4px solid var(--accent);
-      padding-left: 0.5rem;
-      color: var(--accent);
-      margin-top: 2rem;
+      font-size: 1.875rem;
+      font-weight: 500;
+      color: var(--md-sys-color-primary);
+      margin: 0 0 1.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
     }
 
-    a {
-      color: var(--accent);
+    h2 .material-icons {
+      font-size: 1.875rem;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--md-sys-color-on-surface);
+      margin: 1.5rem 0 1rem 0;
+    }
+
+    /* Material Buttons */
+    .md-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-family: 'Roboto', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       text-decoration: none;
+      min-height: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .md-button-filled {
+      background: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+      box-shadow: var(--level1);
+    }
+
+    .md-button-filled:hover {
+      background: var(--md-sys-color-primary-container);
+      color: var(--md-sys-color-on-primary-container);
+      box-shadow: var(--level2);
+    }
+
+    .md-button-outlined {
+      background: transparent;
+      color: var(--md-sys-color-primary);
+      border: 1px solid var(--md-sys-color-outline);
+    }
+
+    .md-button-outlined:hover {
+      background: var(--md-sys-color-primary-container);
+      color: var(--md-sys-color-on-primary-container);
+      border-color: var(--md-sys-color-primary-container);
+    }
+
+    .md-button-tonal {
+      background: var(--md-sys-color-secondary-container);
+      color: var(--md-sys-color-on-secondary-container);
+    }
+
+    .md-button-tonal:hover {
+      background: var(--md-sys-color-tertiary-container);
+      color: var(--md-sys-color-on-tertiary-container);
+    }
+
+    /* Material Chips */
+    .md-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--md-sys-color-surface-variant);
+      color: var(--md-sys-color-on-surface-variant);
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin: 0.25rem;
+    }
+
+    .md-chip-elevated {
+      background: var(--md-sys-color-surface-container-high);
+      box-shadow: var(--level1);
+    }
+
+    /* Feature Grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .feature-card {
+      background: var(--md-sys-color-surface-container);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid var(--md-sys-color-outline-variant);
+    }
+
+    .feature-card:hover {
+      background: var(--md-sys-color-surface-container-high);
+      transform: translateY(-4px);
+      box-shadow: var(--level2);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--md-sys-color-primary-container);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .feature-icon .material-icons {
+      font-size: 28px;
+      color: var(--md-sys-color-on-primary-container);
+    }
+
+    .feature-title {
+      font-size: 1.125rem;
+      font-weight: 500;
+      color: var(--md-sys-color-on-surface);
+      margin: 0 0 0.5rem 0;
+    }
+
+    .feature-description {
+      font-size: 0.875rem;
+      color: var(--md-sys-color-on-surface-variant);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* Tabs */
+    .md-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--md-sys-color-outline-variant);
+      padding-bottom: 0;
+    }
+
+    .md-tab {
+      padding: 0.75rem 1.5rem;
+      background: transparent;
+      border: none;
+      border-radius: 20px 20px 0 0;
+      color: var(--md-sys-color-on-surface-variant);
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .md-tab:hover {
+      background: var(--md-sys-color-surface-variant);
+      color: var(--md-sys-color-on-surface);
+    }
+
+    .md-tab.active {
+      background: var(--md-sys-color-surface-container);
+      color: var(--md-sys-color-primary);
+    }
+
+    .md-tab.active::after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--md-sys-color-primary);
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Lists */
+    ol, ul {
+      padding-left: 1.5rem;
+      margin: 0;
+    }
+
+    li {
+      margin-bottom: 0.75rem;
+      color: var(--md-sys-color-on-surface);
+    }
+
+    /* Code blocks */
+    code {
+      background: var(--md-sys-color-surface-container);
+      color: var(--md-sys-color-primary);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.875rem;
+    }
+
+    .code-block {
+      background: var(--md-sys-color-surface-container);
+      border-radius: 12px;
+      padding: 1.5rem;
+      overflow-x: auto;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      margin: 1rem 0;
+      border: 1px solid var(--md-sys-color-outline-variant);
+    }
+
+    /* Links */
+    a {
+      color: var(--md-sys-color-primary);
+      text-decoration: none;
+      transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     a:hover {
-      text-decoration: underline;
+      color: var(--md-sys-color-primary-container);
     }
 
-    code {
-      background: var(--code);
-      padding: 0.2em 0.4em;
-      border-radius: 4px;
-      font-family: monospace;
+    /* Discord Section */
+    .discord-section {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      flex-wrap: wrap;
     }
 
-    ol, ul {
-      padding-left: 1.5rem;
+    .discord-links {
+      flex: 1;
+      min-width: 300px;
     }
 
-    .button {
-      display: inline-block;
-      margin-top: 1rem;
-      padding: 0.75em 1.6em;
-      background-color: var(--accent);
-      color: #000;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: 0.3s ease;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    .discord-qr {
+      flex-shrink: 0;
     }
 
-    .button:hover {
-      filter: brightness(1.15);
-      transform: scale(1.03);
+    .discord-qr img {
+      border-radius: 16px;
+      box-shadow: var(--level2);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+    .discord-qr img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Thanks Grid */
+    .thanks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .thanks-item {
+      background: var(--md-sys-color-surface-variant);
+      border-radius: 12px;
+      padding: 1rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .thanks-item:hover {
+      background: var(--md-sys-color-surface-container);
+      transform: translateY(-2px);
+    }
+
+    /* GitHub Corner */
     .github-corner {
-      fill: var(--accent);
-      color: #000;
       position: absolute;
-      top: 0;
-      right: 0;
+      top: 1rem;
+      right: 1rem;
+      z-index: 1000;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+    .github-corner:hover {
+      transform: scale(1.1);
+    }
+
+    .github-corner img {
+      width: 48px;
+      height: 48px;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+
+    /* FAB - Floating Action Button */
+    .fab {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: var(--md-sys-color-primary-container);
+      color: var(--md-sys-color-on-primary-container);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--level3);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0;
+      visibility: hidden;
+      z-index: 1000;
+    }
+
+    .fab.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .fab:hover {
+      transform: scale(1.1);
+      box-shadow: var(--level5);
+    }
+
+    /* Footer */
     footer {
       text-align: center;
+      padding: 3rem 1rem;
       margin-top: 3rem;
-      font-size: 0.9em;
-      color: var(--muted);
+      border-top: 1px solid var(--md-sys-color-outline-variant);
+      color: var(--md-sys-color-on-surface-variant);
     }
 
+    /* Responsive */
     @media (max-width: 768px) {
-      .content {
-        padding: 1.2rem;
-      }
-
-      h1 {
-        font-size: 2rem;
-      }
-
-      header img {
-        max-width: 90%;
-      }
+      h1 { font-size: 2.5rem; }
+      .md-card { padding: 1.5rem; }
+      .discord-section { flex-direction: column; }
+      .md-tabs { overflow-x: auto; }
+      .feature-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
+  <div class="bg-gradient"></div>
 
   <!-- GitHub Corner -->
-  <a href="https://github.com/lycanld/LeUnBrIck" class="github-corner" aria-label="View source on GitHub" style="position: absolute; top: 0; right: 0; z-index: 1000; width: 70px; height: 70px; display: block;">
-    <svg width="90" height="90" viewBox="0 0 80 80" style="position: absolute; top: 0; right: 0;" aria-hidden="true">
-      <polygon points="80,0 80,80 0,0" fill="#66ccff"/>
-    </svg>
-    <img src="assets/github.png" alt="GitHub" style="position: absolute; top: 10px; right: 10px; width: 36px; height: 36px; object-fit: contain; filter: drop-shadow(0 1px 4px #0008);" />
+  <a href="https://github.com/lycanld/LeUnBrIck" class="github-corner" aria-label="View source on GitHub">
+    <img src="assets/github.png" alt="GitHub" />
   </a>
 
   <header>
-    <img src="assets/banner.png" alt="LeUnBrIck Banner" />
-    <h1>🎧 LeUnBrIck</h1>
-    <p class="subheading">Universal Unbricker & Flasher for iPod Nano 6G & 7G (2012 / 2015)</p>
-    <a class="button" href="https://github.com/lycanld/LeUnBrIck" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5em;">
-      <img src="assets/github.png" alt="GitHub" style="width:1.3em; height:1.3em; display:inline-block; margin-bottom:-0.15em; margin-right:0.3em;" />
-      <span style="display:inline-block; vertical-align:middle;">View on GitHub</span>
-    </a>
+    <div class="header-content">
+      <img src="assets/banner.png" alt="LeUnBrIck Banner" />
+      <h1>🎧 LeUnBrIck</h1>
+      <p class="subheading">Universal Unbricker & Flasher for iPod Nano 6G & 7G (2012 / 2015)</p>
+      <a class="md-button md-button-filled ripple" href="https://github.com/lycanld/LeUnBrIck" target="_blank">
+        <span class="material-icons">code</span>
+        View on GitHub
+      </a>
+    </div>
   </header>
 
-  <div class="content">
-    <h2>⚡ What is LeUnBrIck?</h2>
-    <p><strong>LeUnBrIck.sh</strong> is a terminal-based bash script to recover bricked iPod Nano devices using DFU/WTF modes, Apple firmware, and tools like <code>wInd3x</code> and <code>ipodscsi</code>.</p>
+  <div class="container">
+    <div class="md-card md-card-elevated">
+      <h2>
+        <span class="material-icons">flash_on</span>
+        What is LeUnBrIck?
+      </h2>
+      <p style="font-size: 1.125rem; margin-bottom: 1.5rem;">
+        <strong>LeUnBrIck</strong> is an all-in-one toolkit to restore bricked iPod Nano 6G & 7G devices. It supports both 2012 & 2015 models and works cross-platform with Linux, macOS, and Windows (BETA).
+      </p>
+      
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <span class="material-icons">sync</span>
+          </div>
+          <h4 class="feature-title">Easy Recovery</h4>
+          <p class="feature-description">Restore bricked iPods with just a few clicks</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <span class="material-icons">devices</span>
+          </div>
+          <h4 class="feature-title">Cross-Platform</h4>
+          <p class="feature-description">Works on Linux, macOS, and Windows</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <span class="material-icons">music_note</span>
+          </div>
+          <h4 class="feature-title">Multi-Model Support</h4>
+          <p class="feature-description">Compatible with iPod Nano 6G & 7G</p>
+        </div>
+      </div>
+    </div>
 
-    <h2>📥 How to Use</h2>
-    <ol>
-      <li>Clone the repository: <code>git clone https://github.com/lycanld/LeUnBrIck</code></li>
-      <li>Change directory: <code>cd LeUnBrIck</code></li>
-      <li>Make it executable: <code>chmod +x LeUnBrIck.sh</code></li>
-      <li>Run the script: <code>./LeUnBrIck.sh</code></li>
-      <li>Follow the terminal UI to select your model and flash firmware</li>
-    </ol>
+    <div class="md-card">
+      <h2>
+        <span class="material-icons">download</span>
+        How to Use
+      </h2>
+      
+      <div class="md-tabs">
+        <button class="md-tab active" onclick="openTab(event, 'linux-macos')">
+          <span class="material-icons" style="font-size: 18px; vertical-align: middle;">computer</span>
+          Linux / macOS
+        </button>
+        <button class="md-tab" onclick="openTab(event, 'windows')">
+          <span class="material-icons" style="font-size: 18px; vertical-align: middle;">desktop_windows</span>
+          Windows (BETA)
+        </button>
+      </div>
+      
+      <div id="linux-macos" class="tab-content active">
+        <ol>
+          <li>Clone the repository: <code>git clone https://github.com/lycanld/LeUnBrIck.git</code></li>
+          <li>Change directory: <code>cd LeUnBrIck</code></li>
+          <li>Make it executable: <code>chmod +x LeUnBrIck.sh</code></li>
+          <li>Run the script: <code>./LeUnBrIck.sh</code></li>
+          <li>Follow the terminal UI to select your model and flash firmware</li>
+        </ol>
+      </div>
+      
+      <div id="windows" class="tab-content">
+        <ol>
+          <li>Clone the repository: <code>git clone https://github.com/lycanld/LeUnBrIck.git</code></li>
+          <li>Double-click <code>LeUnBrIck_Windows.bat</code> or run in Command Prompt</li>
+          <li>The script will check Python, install <code>requests</code> if missing, and run <code>main.py</code></li>
+          <li>Follow on-screen instructions to enter DFU/WTF mode and flash firmware</li>
+        </ol>
+        <div class="md-chip-elevated">
+          <span class="material-icons" style="font-size: 16px;">warning</span>
+          Ensure your iPod is connected before running
+        </div>
+      </div>
+    </div>
 
-    <h2>📁 Features</h2>
-    <ul>
-      <li>Automatic detection of DFU/WTF iPods</li>
-      <li>Auto-install required tools (Option 3)</li>
-      <li>Firmware flashing support for:
-        <ul>
-          <li>iPod Nano 7G (2012)</li>
-          <li>iPod Nano 7G (2015)</li>
-          <li>iPod Nano 6G</li>
-        </ul>
-      </li>
-      <li>Auto-fetch firmware files from AppleDB.dev if missing</li>
-      <li>Supports flashing via wInd3x and ipodscsi (Linux/macOS)</li>
-      <li>Color-coded terminal UI</li>
-    </ul>
+    <div class="md-card">
+      <h2>
+        <span class="material-icons">stars</span>
+        Features
+      </h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon" style="background: var(--md-sys-color-tertiary-container);">
+            <span class="material-icons" style="color: var(--md-sys-color-on-tertiary-container);">restore</span>
+          </div>
+          <h4 class="feature-title">Full Restore</h4>
+          <p class="feature-description">Restore iPod Nano 6G & 7G (2012 & 2015)</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: var(--md-sys-color-secondary-container);">
+            <span class="material-icons" style="color: var(--md-sys-color-on-secondary-container);">memory</span>
+          </div>
+          <h4 class="feature-title">Safe Flashing</h4>
+          <p class="feature-description">Flash WTF & firmware images safely</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: var(--md-sys-color-primary-container);">
+            <span class="material-icons" style="color: var(--md-sys-color-on-primary-container);">cloud_download</span>
+          </div>
+          <h4 class="feature-title">Auto Download</h4>
+          <p class="feature-description">Auto-download missing .MSE firmware files</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: var(--md-sys-color-tertiary-container);">
+            <span class="material-icons" style="color: var(--md-sys-color-on-tertiary-container);">palette</span>
+          </div>
+          <h4 class="feature-title">Color UI</h4>
+          <p class="feature-description">Color-coded terminal UI</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: var(--md-sys-color-secondary-container);">
+            <span class="material-icons" style="color: var(--md-sys-color-on-secondary-container);">build</span>
+          </div>
+          <h4 class="feature-title">Auto Install</h4>
+          <p class="feature-description">Automatic installation of required tools</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background: var(--md-sys-color-primary-container);">
+            <span class="material-icons" style="color: var(--md-sys-color-on-primary-container);">developer_board</span>
+          </div>
+          <h4 class="feature-title">Windows Support</h4>
+          <p class="feature-description">Windows Support (BETA)</p>
+        </div>
+      </div>
+    </div>
 
-    <h2>🔗 Resources</h2>
-    <ul>
-      <li><a href="https://github.com/lycanld/LeUnBrIck" target="_blank">GitHub Repository</a></li>
-      <li><a href="https://appledb.dev" target="_blank">AppleDB – Firmware Archive</a></li>
-      <li><a href="https://github.com/freemyipod/wInd3x" target="_blank">wInd3x</a></li>
-      <li><a href="https://freemyipod.org" target="_blank">freemyipod</a></li>
-    </ul>
+    <div class="md-card">
+      <h2>
+        <span class="material-icons">folder</span>
+        Folder Structure
+      </h2>
+      <div class="code-block">
+.
+├── LeUnBrIck.sh
+├── LeUnBrIck.bat
+├── main.py
+├── wInd3x/
+├── ipodscsi_linux/
+├── firmwares/
+└── assets/
+    ├── banner.png
+    └── discord_qr.png
+      </div>
+    </div>
+
+    <div class="md-card">
+      <h2>
+        <span class="material-icons">forum</span>
+        Join the Community
+      </h2>
+      <p style="margin-bottom: 1.5rem;">Want help, mods, or to show off your themed iPod? Join us on Discord:</p>
+      
+      <div class="discord-section">
+        <div class="discord-links">
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 1rem;">
+              <a href="https://discord.com/invite/SfWYYPUAEZ" target="_blank" style="display: flex; align-items: center; gap: 0.5rem;">
+                <span class="material-icons" style="color: var(--md-sys-color-tertiary);">brush</span>
+                iPod Theme Discord
+              </a>
+            </li>
+            <li style="margin-bottom: 1.5rem;">
+              <a href="https://discord.com/invite/7PnGEXjW3X" target="_blank" style="display: flex; align-items: center; gap: 0.5rem;">
+                <span class="material-icons" style="color: var(--md-sys-color-secondary);">handyman</span>
+                iPod Modding Discord
+              </a>
+            </li>
+          </ul>
+          <a class="md-button md-button-tonal ripple" href="https://discord.com/invite/SfWYYPUAEZ" target="_blank">
+            <span class="material-icons">discord</span>
+            Join Discord
+          </a>
+        </div>
+        <div class="discord-qr">
+          <img src="assets/discord_qr.png" alt="Join the iPod Nano Theming Discord" width="180" />
+        </div>
+      </div>
+    </div>
+
+    <div class="md-card">
+      <h2>
+        <span class="material-icons">favorite</span>
+        Special Thanks
+      </h2>
+      <div class="thanks-grid">
+        <div class="thanks-item">
+          <strong>@LycanLD</strong><br>
+          <small style="color: var(--md-sys-color-on-surface-variant);">Creator & lead developer</small>
+        </div>
+        <div class="thanks-item">
+          <strong>@Ruff</strong><br>
+          <small style="color: var(--md-sys-color-on-surface-variant);">Packaging, testing, distribution</small>
+        </div>
+        <div class="thanks-item">
+          <strong>@nfzerox</strong><br>
+          <small style="color: var(--md-sys-color-on-surface-variant);">ipod_theme</small>
+        </div>
+        <div class="thanks-item">
+          <strong>@CUB3D</strong><br>
+          <small style="color: var(--md-sys-color-on-surface-variant);">ipod_sun</small>
+        </div>
+        <div class="thanks-item">
+          <strong>@freemyipod</strong><br>
+          <small style="color: var(--md-sys-color-on-surface-variant);">wInd3x, freemyipod, ipodscsi</small>
+        </div>
+        <div class="thanks-item">
+          <strong>@Stefan-Schmidt</strong><br>
+          <small style="color: var(--md-sys-color-on-surface-variant);">dfu_utils</small>
+        </div>
+        <div class="thanks-item">
+          <strong>@760ceb3b9c0ba4872cadf3ce35a7a494</strong><br>
+          <small style="color: var(--md-sys-color-on-surface-variant);">ipodhax & IPSW unpacking scripts</small>
+        </div>
+        <div class="thanks-item">
+          <strong>@Zeehondie</strong><br>
+          <small style="color: var(--md-sys-color-on-surface-variant);">Seal inspiration 🦭</small>
+        </div>
+      </div>
+    </div>
 
     <footer>
-      <p>🚀 Made with 💖 by <a href="https://github.com/lycanld">Lycan</a> — MIT Licensed</p>
+      <p style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+        <span class="material-icons" style="color: var(--md-sys-color-tertiary);">rocket_launch</span>
+        Made with 
+        <span class="material-icons" style="color: var(--md-sys-color-tertiary);">favorite</span>
+        by <a href="https://github.com/lycanld">Lycan</a> — MIT Licensed
+      </p>
     </footer>
-    <div style="text-align:center; margin: 2rem 0 0 0;">
-      <button class="button back-to-top" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">Back to Top ⬆️</button>
-    </div>
   </div>
+
+  <!-- FAB -->
+  <button class="fab" id="fab" onclick="scrollToTop()">
+    <span class="material-icons">keyboard_arrow_up</span>
+  </button>
+
+  <script>
+    // Tab functionality
+    function openTab(evt, tabName) {
+      const tabContents = document.getElementsByClassName("tab-content");
+      const tabs = document.getElementsByClassName("md-tab");
+      
+      for (let i = 0; i < tabContents.length; i++) {
+        tabContents[i].classList.remove("active");
+      }
+      
+      for (let i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove("active");
+      }
+      
+      document.getElementById(tabName).classList.add("active");
+      evt.currentTarget.classList.add("active");
+    }
+
+    // FAB visibility
+    window.addEventListener('scroll', () => {
+      const fab = document.getElementById('fab');
+      if (window.scrollY > 300) {
+        fab.classList.add('visible');
+      } else {
+        fab.classList.remove('visible');
+      }
+    });
+
+    // Smooth scroll to top
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+    // Add ripple effect to buttons
+    document.querySelectorAll('.ripple').forEach(button => {
+      button.addEventListener('click', function(e) {
+        const ripple = document.createElement('span');
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+        
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        ripple.classList.add('ripple-effect');
+        
+        this.appendChild(ripple);
+        
+        setTimeout(() => {
+          ripple.remove();
+        }, 600);
+      });
+    });
+
+    // Animate cards on scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.md-card').forEach((card, index) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px)';
+      card.style.transition = `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`;
+      observer.observe(card);
+    });
+  </script>
 </body>
 </html>
-<script>
-  // Smooth scroll to top
-  document.querySelector('footer a').addEventListener('click', function(event) {
-    event.preventDefault();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });   
