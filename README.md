@@ -4,47 +4,47 @@
 
 # 🎧 LeUnBrIck (Now supports Windows)
 
-> ⚡ Universal Unbricker & Flasher for iPod Nano 6th & 7th Gen (2012 & 2015)
+> Universal Unbricker & Flasher for iPod Nano 6th & 7th Gen (2012 & 2015)
 
 `LeUnBrIck` is an all-in-one toolkit for **restoring bricked iPod Nano 6G / 7G devices** using DFU/WTF mode.  
 It supports both the 2012 and 2015 hardware revisions and provides options to flash using **wInd3x** or **ipodscsi**.
 
 ---
 
-## 🔧 Features
+## Features
 
-- ✅ Restore softbricked iPod Nano 6G and 7G (2012 & 2015)  
-- ⚡ Flash WTF & firmware images safely & easily
-- ☁️ Auto-download missing `.MSE` firmware files  
-- 🎨 Clean cli interface
-- 📦 Automatic installation of required tools on **Linux** distros  
-- 🪟 **Windows Support (BETA)** via `LeUnBrIck_Windows.bat`  
-- 🖥 Cross-platform (Linux, macOS, Windows)  
+- Restore softbricked iPod Nano 6G and 7G (2012 & 2015)  
+- Flash WTF & firmware images safely & easily
+- Auto-download missing `.MSE` firmware files  
+- Clean cli interface
+- Automatic installation of required tools on **Linux** distros  
+- **Windows Support (BETA)** via `LeUnBrIck_Windows.bat`  
+- Cross-platform (Linux, macOS, Windows)  
 
 ---
 
-## 📥 Requirements
+## Requirements
 
 ### Linux/macOS
 
-* 🐧 **Linux** (Debian, Arch, Alpine, etc.) or **macOS**  
-  > ✅ Recommended: Arch Linux on real hardware (Steam Deck or Live USB works)  
-* 🔌 **USB-A to Lightning cable**  
-* 📦 Required packages: `dfu-util`, `libusb`, `make`, `go`, `git`  
+* **Linux** (Debian, Arch, Alpine, etc.) or **macOS**  
+  > Recommended: Arch Linux on real hardware (Steam Deck or Live USB works)  
+* **USB-A to Lightning cable**  
+* Required packages: `dfu-util`, `libusb`, `make`, `go`, `git`  
 
 > 🛠 No need to install manually — the built-in installer handles it.
 
 ### Windows (BETA)
 
-* 🪟 Windows 7, 8, 10, 11  
-* 🐍 Python installed and added to PATH  
-* 🔌 **USB-A to Lightning cable**  
+* Windows 7, 8, 10, 11  
+* Python installed and added to PATH  
+* **USB-A to Lightning cable**  
 
-> 💡 Tip: Using a Linux Live USB is more reliable for flashing.
+> Tip: Using a Linux Live USB is more reliable for flashing.
 
 ---
 
-## 🧪 Usage
+## Usage
 
 ### Linux/macOS
 
@@ -76,7 +76,7 @@ chmod +x LeUnBrIck.sh
 
 ---
 
-### 🧙 Inside the Menu (Linux/macOS/Windows)
+### Inside the Menu (Linux/macOS/Windows)
 
 1. **Option 3** — Install required packages
 2. **Option 2** — 2012/2015 iPod Nano 7G
@@ -86,7 +86,7 @@ chmod +x LeUnBrIck.sh
 
 ---
 
-## 📁 Folder Structure
+## Folder Structure
 
 ```
 .
@@ -103,7 +103,7 @@ chmod +x LeUnBrIck.sh
 
 ---
 
-## 📌 TODO
+## TODO
 
 * [x] Nano 6G support
 * [x] Auto-download `.MSE` files
@@ -117,7 +117,7 @@ chmod +x LeUnBrIck.sh
 
 ---
 
-## ⚠️ Notes
+## Notes
 
 * GitHub does **not allow files >100MB**, so `.MSE` files are **not included**
 * Script auto-downloads missing firmware files when needed
@@ -126,7 +126,7 @@ chmod +x LeUnBrIck.sh
 
 ---
 
-## 🙌 Special Thanks
+## Special Thanks
 
 * **@LycanLD** — Creator & lead developer
 * **@Ruff** — Packaging, testing, distribution
@@ -141,8 +141,8 @@ chmod +x LeUnBrIck.sh
 
 ## 💬 Join the Community
 
-* 🎨 **iPod Theme Discord**: [https://discord.com/invite/SfWYYPUAEZ](https://discord.com/invite/SfWYYPUAEZ)
-* 🔧 **iPod Modding Discord**: [https://discord.com/invite/7PnGEXjW3X](https://discord.com/invite/7PnGEXjW3X)
+* **iPod Theme Discord**: [https://discord.com/invite/SfWYYPUAEZ](https://discord.com/invite/SfWYYPUAEZ)
+* **iPod Modding Discord**: [https://discord.com/invite/7PnGEXjW3X](https://discord.com/invite/7PnGEXjW3X)
 
 <p align="center">
   <img src="assets/discord_qr.png" alt="Join the iPod Nano Theming Discord" width="200"/>
@@ -150,16 +150,14 @@ chmod +x LeUnBrIck.sh
 
 ---
 
-## ⭐ Give this project a star if it worked for you! 🌟
+## Give this project a star if it worked for you! 
 
 ---
 
-## 📜 License
+## License
 
 MIT License — free to use, fork, and modify. Contributions welcome.
 
 ---
 
-## ✨ Created by [Lycan](https://github.com/lycanld)
-
-### 📦 Distributed by **Ruff's Softwares & Games**
+## Created by [Lycan](https://github.com/lycanld)
